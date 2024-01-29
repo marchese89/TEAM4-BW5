@@ -10,7 +10,6 @@ import lombok.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString
 public class Comune {
     @Id
@@ -22,6 +21,7 @@ public class Comune {
     @ManyToOne
     @JoinColumn(name = "provincia", nullable = false)
     private Provincia provincia;
+
 
 
 }
