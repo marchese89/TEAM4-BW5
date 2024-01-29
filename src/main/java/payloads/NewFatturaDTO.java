@@ -6,13 +6,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record NewFatturaDTO(
-        @NotNull(message ="Campo obbligatorio" )
+        @NotNull(message ="Data obbligatorio" )
         LocalDate data,
-        @NotNull(message ="Campo obbligatorio" )
+        @NotNull(message ="Importo fattura obbligatorio" )
         Double importo,
-        @NotNull(message ="Campo obbligatorio" )
-        Long numero,
-        @NotNull(message ="Campo obbligatorio" )
+        @NotNull(message ="Id obbligatorio" )
         Long id
 ){
 }
