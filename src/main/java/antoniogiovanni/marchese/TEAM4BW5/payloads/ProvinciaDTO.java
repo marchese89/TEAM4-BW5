@@ -8,6 +8,6 @@ import java.util.UUID;
 public class ProvinciaDTO {
     String sigla; String provincia; String regione;
 
-    public ProvinciaDTO(UUID id) {
+    public ProvinciaDTO(long id) {
     }
 }

@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface ProvinciaRepository extends JpaRepository <Provincia, UUID> {
-    Optional<Object> findByName(String provincia);
+    Optional<Provincia> findByName(String provincia);
 
 
 }

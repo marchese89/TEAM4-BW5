@@ -20,7 +20,7 @@ public class IndirizzoService {
     private IndirizzoRepository indirizzoRepository;
 
     @Autowired
-    private ComuneService comuneService;
+    private antoniogiovanni.marchese.TEAM4BW5.service.ComuneService comuneService;
 
     @Autowired
     private ClienteService clienteService;

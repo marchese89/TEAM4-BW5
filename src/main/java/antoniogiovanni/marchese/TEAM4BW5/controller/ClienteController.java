@@ -1,10 +1,10 @@
 package antoniogiovanni.marchese.TEAM4BW5.controller;
 
-import antoniogiovanni.marchese.TEAM4BW5.Service.ClienteService;
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Cliente;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ClienteDTO;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ClienteResponseDTO;
+import antoniogiovanni.marchese.TEAM4BW5.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cliente")
 public class ClienteController {
     @Autowired
-    ClienteService clienteService;
+    private ClienteService clienteService;
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
