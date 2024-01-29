@@ -1,5 +1,6 @@
 package antoniogiovanni.marchese.TEAM4BW5.service;
 
+import antoniogiovanni.marchese.TEAM4BW5.exceptions.NotFoundException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Cliente;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ClienteDTO;
 import antoniogiovanni.marchese.TEAM4BW5.repository.ClienteRepository;
