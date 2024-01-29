@@ -1,6 +1,6 @@
 package service;
 
-import Exceptions.NotFoundException;
+import exceptions.NotFoundException;
 import model.Fattura;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,7 +36,6 @@ public class FatturaService {
         Fattura found = this.findById(id);
         found.setData(body.getData());
         found.setImporto(body.getImporto());
-        found.setNumero(body.getNumero());
         return fatturaRepository.save(found);
     }
 

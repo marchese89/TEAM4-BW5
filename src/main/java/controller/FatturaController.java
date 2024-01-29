@@ -1,6 +1,6 @@
 package controller;
 
-import Exceptions.BadRequestException;
+import exceptions.BadRequestException;
 import model.Fattura;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,12 +28,10 @@ public class FatturaController {
     {
         System.out.println(validation);
         if (validation.hasErrors()) {
-            System.out.println(validation.getAllErrors());
-            throw new BadRequestException("Errori nel payload!");
-        } else {
+            throw new BadRequestException(validation.getAllErrors().stream().map(err -> err.getDefaultMessage()).toList().toString());
+        }
             Fattura newFattura = fatturaService.save(newFatturaPayload);
             return new NewFatturaResponseDTO(newFattura.getId());
-        }
     }
 
     @PutMapping("/{fatturaId}")

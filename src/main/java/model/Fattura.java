@@ -11,8 +11,7 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @Entity
-@Table(name = "fattura")
-
+@Table(name = "fatture")
 public class Fattura {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +20,7 @@ public class Fattura {
     @Column(name = "data")
     private LocalDate data;
     @Column(name = "importo")
-    private Long importo;
+    private Double importo;
     @Column(name = "numero")
     private Long numero;
 
