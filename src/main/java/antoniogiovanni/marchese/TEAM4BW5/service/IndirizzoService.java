@@ -1,4 +1,4 @@
-package antoniogiovanni.marchese.TEAM4BW5.service;
+package antoniogiovanni.marchese.TEAM4BW5.Service;
 
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.NotFoundException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Cliente;
@@ -56,7 +56,7 @@ public class IndirizzoService {
 
     public Indirizzo findByIdAndUpdate(long id, NewIndirizzoDTO indirizzoDTO) {
         Indirizzo found = this.findById(id);
-        Comune comune = comuneService.findById(indirizzoDTO.comune().getId());
+        Comune comune = comuneService.findById(indirizzoDTO.idComune());
         Cliente cliente = clienteService.findById(indirizzoDTO.idCliente());
         found.setCap(indirizzoDTO.cap());
         found.setVia(indirizzoDTO.via());

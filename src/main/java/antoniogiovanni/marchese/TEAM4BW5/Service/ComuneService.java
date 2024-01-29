@@ -1,5 +1,6 @@
 package antoniogiovanni.marchese.TEAM4BW5.Service;
 
+import antoniogiovanni.marchese.TEAM4BW5.exceptions.NotFoundException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Comune;
 import antoniogiovanni.marchese.TEAM4BW5.model.Comune;
 import antoniogiovanni.marchese.TEAM4BW5.model.Provincia;
@@ -38,7 +39,7 @@ public Page<Comune> getComune(int page, int size, String orderBy) {
             return comuneRepository.findAll(pageable);
         }
 
-        public Comune findByIdAndUpdate(int id, ComuneDTO body) {
+        public Comune findByIdAndUpdate(long id, ComuneDTO body) {
                 Comune found = this.findById(id);
 
                 found.setDenominazione(body.getDenominazione());
@@ -51,11 +52,11 @@ public Page<Comune> getComune(int page, int size, String orderBy) {
                 return comuneRepository.save(found);
         }
 
-                public Comune findById(int id) {
+                public Comune findById(long id) {
                         return comuneRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
                 }
 
-        public void findByIdAndDelete(int id) {
+        public void findByIdAndDelete(long id) {
                 Comune found = this.findById(id);
                 comuneRepository.delete(found);
         }

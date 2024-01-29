@@ -8,6 +8,6 @@ import lombok.Getter;
 public class ComuneDTO {
     int codiceProvincia; String denominazione; Provincia provincia;
 
-    public ComuneDTO(int progressivoDelComune) {
+    public ComuneDTO(long progressivoDelComune) {
     }
 }
