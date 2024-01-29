@@ -4,6 +4,7 @@ import exceptions.BadRequestException;
 import model.Fattura;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +18,14 @@ public class FatturaController {
     @Autowired
     private FatturaService fatturaService;
 
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @GetMapping("/{fatturaId}")
     public Fattura getFatturaById(@PathVariable Long fatturaId) {
         return fatturaService.findById(fatturaId);
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public NewFatturaResponseDTO createFattura(@RequestBody @Validated NewFatturaDTO newFatturaPayload, BindingResult validation)
     {
@@ -35,11 +38,13 @@ public class FatturaController {
     }
 
     @PutMapping("/{fatturaId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     public Fattura getFatturaByIdAndUpdate(@PathVariable Long fatturaId, @RequestBody Fattura modifiedFatturaPayload) {
         return fatturaService.findByIdAndUpdate(fatturaId, modifiedFatturaPayload);
     }
 
     @DeleteMapping("/{fatturaId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void getFatturaByIdAndDelete(@PathVariable Long fatturaId) {
         fatturaService.findByIdAndDelete(fatturaId);
