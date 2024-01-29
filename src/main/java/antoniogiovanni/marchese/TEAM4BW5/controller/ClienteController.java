@@ -42,17 +42,20 @@ public class ClienteController {
 
     @PutMapping("/{clienteId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Cliente getClienteByIdAndUpdate(@PathVariable Long clienteId, @RequestBody @Validated Cliente modifiedClientePayload, BindingResult validation) throws Exception {
+    public ClienteResponseDTO getClienteByIdAndUpdate(@PathVariable long clienteId, @RequestBody @Validated ClienteDTO modifiedClientePayload, BindingResult validation) throws Exception {
         if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors().stream().map(err -> err.getDefaultMessage()).toList().toString());
         }
-        return clienteService.findByIdAndUpdate(clienteId, modifiedClientePayload);
+
+        Cliente cliente = clienteService.findByIdAndUpdate(clienteId, modifiedClientePayload);
+        return new ClienteResponseDTO(cliente.getId());
     }
 
     @DeleteMapping("/{clienteId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void getClienteByIdAndDelete(@PathVariable Long clienteId) {
+    public void getClienteByIdAndDelete(@PathVariable long clienteId) {
+        Cliente found = clienteService.findById(clienteId);
         clienteService.findByIdAndDelete(clienteId);
     }
 }

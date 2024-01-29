@@ -40,7 +40,7 @@ public class ClienteService {
         if (clienteDTO.cognomeContatto() != null) {
             nuovoCliente.setCognomeContatto(clienteDTO.cognomeContatto());
         }
-        
+
         if (clienteDTO.telefonoContatto() != null) {
             nuovoCliente.setTelefonoContatto(clienteDTO.telefonoContatto());
         }
@@ -59,12 +59,32 @@ public class ClienteService {
         return clienteRepository.findById(id).orElseThrow(() -> new NotFoundException("Cliente non trovato con ID: " + id));
     }
 
-    public Cliente findByIdAndUpdate(long id, Cliente body) {
-        Cliente evento = clienteRepository.findById(id)
+    public Cliente findByIdAndUpdate(long id, ClienteDTO body) {
+        Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Cliente non trovato con ID: " + id));
+        cliente.setRagioneSociale(body.ragioneSociale());
+        cliente.setPartitaIva(body.partitaIva());
+        cliente.setEmail(body.email());
+        cliente.setDataUltimoContatto(LocalDate.now());
+        cliente.setFatturatoAnnuale(body.fatturatoAnnuale());
+        cliente.setPec(body.pec());
+        cliente.setTelefono(body.telefono());
+        if (body.emailContatto() != null) {
+            cliente.setEmailContatto(body.emailContatto());
+        }
+        if (body.nomeContatto() != null) {
+            cliente.setNomeContatto(body.nomeContatto());
+        }
+        if (body.cognomeContatto() != null) {
+            cliente.setCognomeContatto(body.cognomeContatto());
+        }
 
+        if (body.telefonoContatto() != null) {
+            cliente.setTelefonoContatto(body.telefonoContatto());
+        }
+        cliente.setTipo(body.tipo());
 
-        return clienteRepository.save(evento);
+        return clienteRepository.save(cliente);
     }
 
     public void findByIdAndDelete(long id) {
