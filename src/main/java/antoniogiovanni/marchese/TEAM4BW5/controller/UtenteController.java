@@ -1,10 +1,15 @@
 package antoniogiovanni.marchese.TEAM4BW5.controller;
 
+import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Utente;
+import antoniogiovanni.marchese.TEAM4BW5.payloads.UtenteDTO;
+import antoniogiovanni.marchese.TEAM4BW5.payloads.UtenteResponseDTO;
 import antoniogiovanni.marchese.TEAM4BW5.service.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +32,13 @@ public class UtenteController {
     }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Utente createUser(@RequestBody Utente newUserPayload){
-        return utenteService.save(newUserPayload);
+    public UtenteResponseDTO createUser(@RequestBody @Validated UtenteDTO newUserPayload, BindingResult validation){
+        if (validation.hasErrors()) {
+            throw new BadRequestException(validation.getAllErrors().stream().map(err -> err.getDefaultMessage()).toList().toString());
+        }
+            Utente nuovoUtente = utenteService.save(newUserPayload);
+            return new UtenteResponseDTO(nuovoUtente.getId());
+
     }
     @PutMapping("/{id}")
     public Utente findByIdAndUpdate(@PathVariable long id, @RequestBody Utente updateUserPayload){

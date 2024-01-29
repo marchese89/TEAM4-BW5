@@ -3,6 +3,7 @@ package antoniogiovanni.marchese.TEAM4BW5.service;
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.NotFoundException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Utente;
+import antoniogiovanni.marchese.TEAM4BW5.payloads.UtenteDTO;
 import antoniogiovanni.marchese.TEAM4BW5.repository.UtenteDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,12 +24,18 @@ public class UtenteService {
         return utenteDAO.findAll(pageable);
     }
 
-    public Utente save(Utente body){
-        utenteDAO.findByEmail(body.getEmail()).ifPresent(utente -> {
+    public Utente save(UtenteDTO body){
+        utenteDAO.findByEmail(body.email()).ifPresent(utente -> {
             throw new BadRequestException("L'email "+utente.getEmail()+ " è già in uso!");
         });
-        body.setAvatar("https://ui-avatars.com/api/?name=" + body.getNome() + "+" + body.getCognome());
-        return utenteDAO.save(body);
+        Utente nuovoUtente = new Utente();
+        nuovoUtente.setAvatar("https://ui-avatars.com/api/?name=" + nuovoUtente.getNome() + "+" + nuovoUtente.getCognome());
+        nuovoUtente.setNome(body.nome());
+        nuovoUtente.setCognome(body.cognome());
+        nuovoUtente.setEmail(body.email());
+        nuovoUtente.setUsername(body.username());
+        nuovoUtente.setPassword(body.password());
+        return utenteDAO.save(nuovoUtente);
     }
 
     public Utente findById(long id){
