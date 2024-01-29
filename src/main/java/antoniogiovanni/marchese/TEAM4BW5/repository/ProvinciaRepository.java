@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface ProvinciaRepository extends JpaRepository <Provincia, UUID> {
+public interface ProvinciaRepository extends JpaRepository <Provincia, Long> {
     Optional<Provincia> findByName(String provincia);
 
 

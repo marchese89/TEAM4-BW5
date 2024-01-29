@@ -23,7 +23,7 @@ public class ComuneController {
     }
 
     @GetMapping("/{idComune}")
-    public Comune getComuneById(@PathVariable int idComune){
+    public Comune getComuneById(@PathVariable Long idComune){
         return comuneService.findById(idComune);
     }
 
@@ -31,19 +31,19 @@ public class ComuneController {
     @ResponseStatus(HttpStatus.CREATED)
     public ComuneDTO createComune(ComuneDTO comuneDTO){
         Comune comune = comuneService.save(comuneDTO);
-        return new ComuneDTO(comune.getProgressivoDelComune());
+        return new ComuneDTO(comuneDTO.codiceProvincia(),comuneDTO.denominazione());
     }
 
     @PutMapping("/{idComune}")
-    public ComuneDTO modifyComune( ComuneDTO comuneDTO,@PathVariable int idComune){
+    public ComuneDTO modifyComune( ComuneDTO comuneDTO,@PathVariable Long idComune){
         Comune found = comuneService.findById(idComune);
 
         Comune comune = comuneService.findByIdAndUpdate(idComune,comuneDTO);
-        return new ComuneDTO(comune.getProgressivoDelComune());
+        return new ComuneDTO(comuneDTO.codiceProvincia(), comuneDTO.denominazione());
     }
-    @DeleteMapping("/{idIndirizzo}")
+    @DeleteMapping("/{idComune}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteComune(@PathVariable int idComune){
+    public void deleteComune(@PathVariable Long idComune){
         Comune found = comuneService.findById(idComune);
         comuneService.findByIdAndDelete(idComune);
     }

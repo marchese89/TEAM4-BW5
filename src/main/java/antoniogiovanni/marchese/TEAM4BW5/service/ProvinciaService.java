@@ -36,10 +36,10 @@ public class ProvinciaService {
     public Provincia findByName(String provincia) {
         return provinciaRepository.findByName(provincia).orElseThrow(() -> new NotFoundException(provincia));
     }
-    public Provincia findById(UUID id) {
+    public Provincia findById(Long id) {
         return provinciaRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
-    public Provincia findByIdAndUpdate(UUID id, ProvinciaDTO body) {
+    public Provincia findByIdAndUpdate(Long id, ProvinciaDTO body) {
 
         Provincia found = this.findById(id);
         found.setProvincia(body.getProvincia());
@@ -48,7 +48,7 @@ public class ProvinciaService {
         return provinciaRepository.save(found);
     }
 
-    public void findByIdAndDelete(UUID id) {
+    public void findByIdAndDelete(Long id) {
         Provincia found = this.findById(id);
         provinciaRepository.delete(found);
     }

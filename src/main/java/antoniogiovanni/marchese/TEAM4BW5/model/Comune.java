@@ -15,7 +15,6 @@ public class Comune {
     @Id
     private long progressivoDelComune;
 
-    private int codiceProvincia;
     private String denominazione;
 
     @ManyToOne

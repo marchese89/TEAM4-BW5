@@ -1,5 +1,4 @@
 package antoniogiovanni.marchese.TEAM4BW5.service;
-
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.NotFoundException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Comune;
 import antoniogiovanni.marchese.TEAM4BW5.model.Comune;
@@ -23,16 +22,15 @@ public class ComuneService {
         private ProvinciaService provinciaService;
 
         public Comune save(ComuneDTO comuneDTO) {
-                Provincia provincia = provinciaService.findById(comuneDTO.getProvincia().getId());
+                Provincia provincia = provinciaService.findById(comuneDTO.codiceProvincia());
                 Comune newComune = new Comune();
                 newComune.setProvincia(provincia);
-                newComune.setDenominazione(comuneDTO.getDenominazione());
-                newComune.setCodiceProvincia(comuneDTO.getCodiceProvincia());
+                newComune.setDenominazione(comuneDTO.denominazione());
                 return comuneRepository.save(newComune);
         }
 
 
-public Page<Comune> getComune(int page, int size, String orderBy) {
+        public Page<Comune> getComune(int page, int size, String orderBy) {
 
             Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy).descending());
 
@@ -42,23 +40,19 @@ public Page<Comune> getComune(int page, int size, String orderBy) {
         public Comune findByIdAndUpdate(long id, ComuneDTO body) {
                 Comune found = this.findById(id);
 
-                found.setDenominazione(body.getDenominazione());
-                found.setCodiceProvincia(body.getCodiceProvincia());
-
-                if (found.getProvincia().getId() != body.getProvincia().getId()) {
-                        Provincia newProvincia = provinciaService.findByName(String.valueOf(body.getProvincia()));
-                        found.setProvincia(newProvincia);
-                }
+                found.setDenominazione(body.denominazione());
+                Provincia provincia = provinciaService.findById(body.codiceProvincia());
+                found.setProvincia(provincia);
                 return comuneRepository.save(found);
         }
 
-                public Comune findById(long id) {
-                        return comuneRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
-                }
+        public Comune findById(long id) {
+                return comuneRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+        }
 
         public void findByIdAndDelete(long id) {
                 Comune found = this.findById(id);
                 comuneRepository.delete(found);
         }
 
-        }
+}
