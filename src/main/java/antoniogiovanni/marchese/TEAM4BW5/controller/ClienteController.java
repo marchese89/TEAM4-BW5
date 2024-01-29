@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/cliente")
 public class ClienteController {
     @Autowired
-    ClienteService clienteService;
+    private ClienteService clienteService;
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)

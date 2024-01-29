@@ -23,7 +23,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Autowired
     private JWTTools jwtTools;
     @Autowired
-    private UtenteService usersService;
+    private antoniogiovanni.marchese.TEAM4BW5.service.UtenteService usersService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

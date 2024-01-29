@@ -1,9 +1,9 @@
 package antoniogiovanni.marchese.TEAM4BW5.controller;
 
-import antoniogiovanni.marchese.TEAM4BW5.Service.ComuneService;
-import antoniogiovanni.marchese.TEAM4BW5.Service.ProvinciaService;
 import antoniogiovanni.marchese.TEAM4BW5.model.Provincia;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ProvinciaDTO;
+import antoniogiovanni.marchese.TEAM4BW5.service.ComuneService;
+import antoniogiovanni.marchese.TEAM4BW5.service.ProvinciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class ProvinciaController {
         return provinciaService.getProvincia(page, size, orderBy);
     }
     @GetMapping("/{idProvincia}")
-    public Provincia getProvinciaById(@PathVariable UUID idProvincia){
+    public Provincia getProvinciaById(@PathVariable Long idProvincia){
         return provinciaService.findById(idProvincia);
     }
 
@@ -36,7 +36,7 @@ public class ProvinciaController {
     }
 
     @PutMapping("/{idProvincia}")
-    public ProvinciaDTO modifyProvincia( @RequestBody ProvinciaDTO provinciaDTO,@PathVariable UUID idProvincia){
+    public ProvinciaDTO modifyProvincia( @RequestBody ProvinciaDTO provinciaDTO,@PathVariable Long idProvincia){
         Provincia found = provinciaService.findById(idProvincia);
 
         Provincia provincia = provinciaService.findByIdAndUpdate(idProvincia, provinciaDTO);
@@ -44,7 +44,7 @@ public class ProvinciaController {
     }
     @DeleteMapping("/{idProvincia}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProvincia(@PathVariable UUID idProvincia){
+    public void deleteProvincia(@PathVariable Long idProvincia){
         Provincia found = provinciaService.findById(idProvincia);
         provinciaService.findByIdAndDelete(idProvincia);
     }

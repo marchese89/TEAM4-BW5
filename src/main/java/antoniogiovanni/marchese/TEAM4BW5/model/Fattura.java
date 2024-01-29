@@ -1,5 +1,4 @@
-package model;
-
+package antoniogiovanni.marchese.TEAM4BW5.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +24,7 @@ public class Fattura {
     private Long numero;
 
 
-  //  @ManyToOne
-   // private Cliente cliente
+    @ManyToOne
+    @JoinColumn(name = "cliente_fattura")
+    private Cliente cliente;
 }
-
