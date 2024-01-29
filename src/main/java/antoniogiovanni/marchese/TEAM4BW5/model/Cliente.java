@@ -5,8 +5,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import model.Fattura;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
