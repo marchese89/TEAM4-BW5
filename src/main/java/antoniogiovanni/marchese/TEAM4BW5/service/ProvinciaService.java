@@ -34,7 +34,7 @@ public class ProvinciaService {
     }
 
     public Provincia findByName(String provincia) {
-        return provinciaRepository.findByName(provincia).orElseThrow(() -> new NotFoundException(provincia));
+        return provinciaRepository.findByProvincia(provincia).orElseThrow(() -> new NotFoundException(provincia));
     }
     public Provincia findById(Long id) {
         return provinciaRepository.findById(id).orElseThrow(() -> new NotFoundException(id));

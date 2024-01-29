@@ -11,7 +11,7 @@ import java.util.Scanner;
 @RestController
 @RequestMapping("/uploadCsv")
 public class UploadCSVController {
-    @PostMapping
+    @PostMapping("/comuni")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public void uploadCSVComuni(@RequestParam("file") MultipartFile file) {
@@ -32,7 +32,7 @@ public class UploadCSVController {
             return;
         }
     }
-    @PostMapping
+    @PostMapping("/province")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public void uploadCSVProvince(@RequestParam("file") MultipartFile file) {

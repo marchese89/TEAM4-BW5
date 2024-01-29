@@ -18,8 +18,6 @@ import java.time.LocalDate;
 public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
-    @Autowired
-    private IndirizzoService indirizzoService;
 
     public Cliente creaNuovoCliente(ClienteDTO clienteDTO) {
 
