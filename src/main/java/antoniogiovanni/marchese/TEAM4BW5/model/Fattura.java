@@ -1,5 +1,6 @@
-package model;
+package antoniogiovanni.marchese.TEAM4BW5.model;
 
+import antoniogiovanni.marchese.TEAM4BW5.enums.StatoFattura;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,8 @@ public class Fattura {
     private Double importo;
     @Column(name = "numero")
     private Long numero;
+    @Column(name = "stato_fattura")
+    private StatoFattura statoFattura;
 
 
   //  @ManyToOne

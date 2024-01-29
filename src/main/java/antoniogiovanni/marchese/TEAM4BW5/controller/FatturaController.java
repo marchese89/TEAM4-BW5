@@ -1,16 +1,17 @@
 package antoniogiovanni.marchese.TEAM4BW5.controller;
 
-import exceptions.BadRequestException;
-import model.Fattura;
+import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
+import antoniogiovanni.marchese.TEAM4BW5.model.Fattura;
+import antoniogiovanni.marchese.TEAM4BW5.payloads.NewFatturaDTO;
+import antoniogiovanni.marchese.TEAM4BW5.service.FatturaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import payloads.NewFatturaDTO;
-import payloads.NewFatturaResponseDTO;
-import service.FatturaService;
+import antoniogiovanni.marchese.TEAM4BW5.payloads.NewFatturaResponseDTO;
+
 
 @RestController
 @RequestMapping("/fatture")

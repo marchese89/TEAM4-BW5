@@ -1,11 +1,11 @@
-package antoniogiovanni.marchese.TEAM4BW5.Service;
-
-import exceptions.NotFoundException;
-import model.Fattura;
+package antoniogiovanni.marchese.TEAM4BW5.service;
+import antoniogiovanni.marchese.TEAM4BW5.exceptions.NotFoundException;
+import antoniogiovanni.marchese.TEAM4BW5.payloads.NewFatturaDTO;
+import antoniogiovanni.marchese.TEAM4BW5.repository.FatturaRepository;
+import antoniogiovanni.marchese.TEAM4BW5.model.Fattura;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import payloads.NewFatturaDTO;
-import repository.FatturaRepository;
+
 
 @Service
 public class FatturaService {
