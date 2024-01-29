@@ -1,5 +1,6 @@
 package antoniogiovanni.marchese.TEAM4BW5.payloads;
 
+import antoniogiovanni.marchese.TEAM4BW5.enums.TipoIndirizzo;
 import antoniogiovanni.marchese.TEAM4BW5.model.Comune;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -20,6 +21,10 @@ public record NewIndirizzoDTO(
         @NotEmpty(message = "il cap non può essere vuoto")
         int cap,
         @NotNull(message = "l'indirizzo deve avere un comune")
-        Comune comune
+        long idComune,
+        @NotNull(message = "l'indirizzo deve avere un cliente")
+        long idCliente,
+        TipoIndirizzo tipoIndirizzo
+
 ) {
 }

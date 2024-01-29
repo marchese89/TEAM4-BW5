@@ -1,5 +1,6 @@
 package antoniogiovanni.marchese.TEAM4BW5.model;
 
+import antoniogiovanni.marchese.TEAM4BW5.enums.TipoIndirizzo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,7 +23,12 @@ public class Indirizzo {
     private String numeroCivico;//ad esempio accettiamo 1/A
     private String localita;
     private int cap;
+    @Enumerated(EnumType.STRING)
+    private TipoIndirizzo tipoIndirizzo;
     @ManyToOne
     @JoinColumn(name = "comune_id")
     private Comune comune;
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
 }
