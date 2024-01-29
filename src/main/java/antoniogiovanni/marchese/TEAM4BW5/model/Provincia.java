@@ -1,4 +1,4 @@
-package antoniogiovanni.marchese.TEAM4BW5.Model;
+package antoniogiovanni.marchese.TEAM4BW5.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
