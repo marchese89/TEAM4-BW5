@@ -19,30 +19,32 @@ public class FatturaController {
 
     @GetMapping("/{fatturaId}")
     public Fattura getFatturaById(@PathVariable Long fatturaId) {
-        return FatturaService.findById(fatturaId);
+        return fatturaService.findById(fatturaId);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public NewFatturaResponseDTO createFattura(@RequestBody @Validated NewFatturaDTO newFatturaPayload, BindingResult validation) {
+    public NewFatturaResponseDTO createFattura(@RequestBody @Validated NewFatturaDTO newFatturaPayload, BindingResult validation)
+    {
         System.out.println(validation);
         if (validation.hasErrors()) {
             System.out.println(validation.getAllErrors());
-            throw new BadRequestException("Errori nel payload");
+            throw new BadRequestException("Errori nel payload!");
         } else {
-            Fattura newFattura = FatturaService.save(newFatturaPayload);
+            Fattura newFattura = fatturaService.save(newFatturaPayload);
+            return new NewFatturaResponseDTO(newFattura.getId());
         }
     }
 
     @PutMapping("/{fatturaId}")
     public Fattura getFatturaByIdAndUpdate(@PathVariable Long fatturaId, @RequestBody Fattura modifiedFatturaPayload) {
-        return FatturaService.findByIdAndUpdate(fatturaId, modifiedFatturaPayload);
+        return fatturaService.findByIdAndUpdate(fatturaId, modifiedFatturaPayload);
     }
 
     @DeleteMapping("/{fatturaId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void getFatturaByIdAndDelete(@PathVariable Long fatturaId) {
-        FatturaService.findByIdAndDelete(fatturaId);
+        fatturaService.findByIdAndDelete(fatturaId);
     }
 
 }
