@@ -1,12 +1,13 @@
 package antoniogiovanni.marchese.TEAM4BW5.controller;
 
-import antoniogiovanni.marchese.TEAM4BW5.Service.AuthService;
+import antoniogiovanni.marchese.TEAM4BW5.service.AuthService;
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Utente;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ResponseDTO;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.UserLoginDTO;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.UserLoginResponseDTO;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.UtenteDTO;
+import antoniogiovanni.marchese.TEAM4BW5.service.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
@@ -17,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
     @Autowired
-    AuthService authService;
+    private AuthService authService;
     @Autowired
-    antoniogiovanni.marchese.TEAM4BW5.service.UtenteService utenteService;
+    private UtenteService utenteService;
 
     @PostMapping("/login")
     public UserLoginResponseDTO login(@RequestBody UserLoginDTO body) {
