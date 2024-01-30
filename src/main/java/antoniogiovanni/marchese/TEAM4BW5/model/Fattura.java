@@ -24,7 +24,7 @@ public class Fattura {
     private Double importo;
     @Column(name = "numero")
     private Long numero;
-    @Column(name = "stato_fattura")
+    @Column(name = "stati_fattura")
     private StatoFattura statoFattura;
 
 
