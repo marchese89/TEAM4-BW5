@@ -1,5 +1,6 @@
 package antoniogiovanni.marchese.TEAM4BW5.service;
 
+import antoniogiovanni.marchese.TEAM4BW5.enums.TipoIndirizzo;
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.NotFoundException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Cliente;
 import antoniogiovanni.marchese.TEAM4BW5.model.Comune;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,6 +44,7 @@ public class IndirizzoService {
         newIndirizzo.setCliente(cliente);
         newIndirizzo.setLocalita(indirizzoDTO.localita());
         newIndirizzo.setNumeroCivico(indirizzoDTO.numeroCivico());
+        newIndirizzo.setTipoIndirizzo(indirizzoDTO.tipoIndirizzo());
         return indirizzoRepository.save(newIndirizzo);
     }
 
@@ -66,5 +69,7 @@ public class IndirizzoService {
         found.setNumeroCivico(indirizzoDTO.numeroCivico());
         return indirizzoRepository.save(found);
     }
-
+    public int countByUserIdAndType( Long userId, TipoIndirizzo addressType){
+        return indirizzoRepository.countByUserIdAndType(userId, addressType);
+    }
 }
