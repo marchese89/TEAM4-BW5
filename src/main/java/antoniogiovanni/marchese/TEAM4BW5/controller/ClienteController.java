@@ -20,6 +20,7 @@ public class ClienteController {
     private ClienteService clienteService;
 
     @PostMapping("")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public ClienteResponseDTO saveCliente(@RequestBody @Validated ClienteDTO body, BindingResult validation) throws Exception {
         if (validation.hasErrors()) {
@@ -30,12 +31,14 @@ public class ClienteController {
     }
 
     @GetMapping("")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public Page<Cliente> getClienti(@RequestParam(defaultValue = "0") int page,
                                     @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sortBy) {
         return clienteService.getClienti(page, size, sortBy);
     }
 
     @GetMapping("/{clienteId}")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public Cliente findById(@PathVariable long clienteId) {
         return clienteService.findById(clienteId);
     }
