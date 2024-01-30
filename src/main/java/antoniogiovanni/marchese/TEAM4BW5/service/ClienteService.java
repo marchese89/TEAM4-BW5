@@ -49,7 +49,7 @@ public class ClienteService {
 
     public Page<Cliente> getClienti(int page, int size, String sort) {
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
         return clienteRepository.findAll(pageable);
     }
 
@@ -90,4 +90,89 @@ public class ClienteService {
         clienteRepository.delete(found);
     }
 
+    //----------------------------------------------- ORDER BY NOMECONTATTO ASC
+
+    public Page<Cliente> getClienteSortedByNomeContattoAsc(int page, int size, String sort) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+
+        return clienteRepository.findAllByOrderByNomeContattoAsc(pageable);
+    }
+
+//    public List<Cliente> getClienteSortedByNomeContatto() {
+//        return clienteRepository.findAll(Sort.by("nomeContatto"));
+//    }
+
+
+    //----------------------------------------------- ORDER BY NOMECONTATTO DESC
+
+    public Page<Cliente> getClienteSortedByNomeContattoDesc(int page, int size, String sort) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+
+        return clienteRepository.findAllByOrderByNomeContattoDesc(pageable);
+    }
+
+    //----------------------------------------------- ORDER BY FATTURATOANNUALE ASC
+
+    public Page<Cliente> getClienteSortedByFatturatoAnnualeAsc(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return clienteRepository.findAllByOrderByFatturatoAnnualeAsc(pageable);
+    }
+
+    //----------------------------------------------- ORDER BY FATTURATOANNUALE DESC
+
+    public Page<Cliente> getClienteSortedByFatturatoAnnualeDesc(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return clienteRepository.findAllByOrderByFatturatoAnnualeDesc(pageable);
+    }
+
+    //----------------------------------------------- ORDER BY DATAINSERIMENTO ASC
+
+    public Page<Cliente> getClienteSortedByDataInserimentoAsc(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return clienteRepository.findAllByOrderByDataInserimentoAsc(pageable);
+    }
+
+    //----------------------------------------------- ORDER BY DATAINSERIMENTO DESC
+
+    public Page<Cliente> getClienteSortedByDataInserimentoDesc(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return clienteRepository.findAllByOrderByDataInserimentoDesc(pageable);
+    }
+
+    //----------------------------------------------- ORDER BY DATAULTIMOCONTATTO ASC
+
+    public Page<Cliente> getClienteSortedByDataUltimoContattoAsc(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return clienteRepository.findAllByOrderByDataUltimoContattoAsc(pageable);
+    }
+
+    //----------------------------------------------- ORDER BY DATAULTIMOCONTATTO DESC
+
+    public Page<Cliente> getClienteSortedByDataUltimoContattoDesc(int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return clienteRepository.findAllByOrderByDataUltimoContattoDesc(pageable);
+    }
+
+    //-----------------------FILTER
+    //----------------------------------------------- FILTER BY FATTURATO MAGGIORE
+
+    public Page<Cliente> findByFatturatoAnnualeGreaterThanEqual(Double fatturato, int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+        return clienteRepository.findByFatturatoAnnualeGreaterThanEqual(fatturato, pageable);
+    }
+
+    //----------------------------------------------- FILTER BY FATTURATO MINORE
+    public Page<Cliente> findByFatturatoAnnualeLessThanEqual(Double fatturato, int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+        return clienteRepository.findByFatturatoAnnualeLessThanEqual(fatturato, pageable);
+    }
+
+    //----------------------------------------------- FILTER BY INSERIMENTO AFTER
+
+    public Page<Cliente> findByDataInserimentoAfter(LocalDate dataInserimento, int page, int size, String sort) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+        return clienteRepository.findByDataInserimentoAfter(dataInserimento, pageable);
+    }
 }
