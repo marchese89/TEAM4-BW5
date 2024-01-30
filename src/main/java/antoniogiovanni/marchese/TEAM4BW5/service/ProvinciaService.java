@@ -27,9 +27,9 @@ public class ProvinciaService {
 
     public Provincia save(ProvinciaDTO provinciaDTO) {
         Provincia newProvincia = new Provincia();
-        newProvincia.setSigla(provinciaDTO.getSigla());
-        newProvincia.setProvincia(provinciaDTO.getProvincia());
-        newProvincia.setRegione(provinciaDTO.getRegione());
+        newProvincia.setSigla(provinciaDTO.sigla());
+        newProvincia.setProvincia(provinciaDTO.provincia());
+        newProvincia.setRegione(provinciaDTO.regione());
         return provinciaRepository.save(newProvincia);
     }
 
@@ -42,9 +42,9 @@ public class ProvinciaService {
     public Provincia findByIdAndUpdate(Long id, ProvinciaDTO body) {
 
         Provincia found = this.findById(id);
-        found.setProvincia(body.getProvincia());
-        found.setRegione(body.getRegione());
-        found.setSigla(body.getSigla());
+        found.setProvincia(body.provincia());
+        found.setRegione(body.regione());
+        found.setSigla(body.sigla());
         return provinciaRepository.save(found);
     }
 

@@ -30,17 +30,14 @@ public class ProvinciaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProvinciaDTO createProvincia(@RequestBody ProvinciaDTO provinciaDTO){
-        Provincia provincia = provinciaService.save(provinciaDTO);
-        return new ProvinciaDTO(provincia.getId());
+    public Provincia createProvincia(@RequestBody ProvinciaDTO provinciaDTO){
+        return provinciaService.save(provinciaDTO);
     }
 
     @PutMapping("/{idProvincia}")
-    public ProvinciaDTO modifyProvincia( @RequestBody ProvinciaDTO provinciaDTO,@PathVariable Long idProvincia){
+    public Provincia modifyProvincia( @RequestBody ProvinciaDTO provinciaDTO,@PathVariable Long idProvincia){
         Provincia found = provinciaService.findById(idProvincia);
-
-        Provincia provincia = provinciaService.findByIdAndUpdate(idProvincia, provinciaDTO);
-        return new ProvinciaDTO(provincia.getId());
+        return provinciaService.findByIdAndUpdate(idProvincia, provinciaDTO);
     }
     @DeleteMapping("/{idProvincia}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

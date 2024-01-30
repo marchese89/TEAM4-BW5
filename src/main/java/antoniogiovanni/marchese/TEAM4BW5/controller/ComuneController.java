@@ -29,9 +29,8 @@ public class ComuneController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ComuneDTO createComune(ComuneDTO comuneDTO){
-        Comune comune = comuneService.save(comuneDTO);
-        return new ComuneDTO(comuneDTO.codiceProvincia(),comuneDTO.denominazione());
+    public Comune createComune(Comune comune){
+        return comuneService.save(comune);
     }
 
     @PutMapping("/{idComune}")

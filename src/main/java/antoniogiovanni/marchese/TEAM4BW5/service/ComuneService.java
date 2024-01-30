@@ -21,12 +21,8 @@ public class ComuneService {
         @Autowired
         private ProvinciaService provinciaService;
 
-        public Comune save(ComuneDTO comuneDTO) {
-                Provincia provincia = provinciaService.findById(comuneDTO.codiceProvincia());
-                Comune newComune = new Comune();
-                newComune.setProvincia(provincia);
-                newComune.setDenominazione(comuneDTO.denominazione());
-                return comuneRepository.save(newComune);
+        public Comune save(Comune comune) {
+                return comuneRepository.save(comune);
         }
 
 

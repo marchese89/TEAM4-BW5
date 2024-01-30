@@ -1,5 +1,6 @@
 package antoniogiovanni.marchese.TEAM4BW5.payloads;
 
+import antoniogiovanni.marchese.TEAM4BW5.enums.Role;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -15,6 +16,7 @@ public record UtenteDTO(@NotEmpty(message = "Il nome è un campo obbligatorio!")
                          @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "L'email inserita non è valida")
                          String email,
                         @NotEmpty(message = "L'username è un campo obbligatorio!")
-                         String username) {
+                         String username,
+                        Role role) {
 
 }

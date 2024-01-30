@@ -35,6 +35,7 @@ public class AuthController {
         if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors().stream().toList().toString()); // L'eccezione arriverà agli error handlers tra i quali c'è quello che manderà la risposta con status code 400
         } else {
+            System.out.println(newUserPayload);
             Utente newUser = utenteService.save(newUserPayload);
 
             return new ResponseDTO(newUser.getId());

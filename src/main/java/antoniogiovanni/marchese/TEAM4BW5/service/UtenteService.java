@@ -10,12 +10,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UtenteService {
     @Autowired
     private UtenteRepository utenteRepository;
+
+    private PasswordEncoder bcrypt =  new BCryptPasswordEncoder(11);
     public Page<Utente> getUsers(int page, int size, String orderBy){
         if (size >= 100) size = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
@@ -32,7 +36,10 @@ public class UtenteService {
         nuovoUtente.setCognome(body.cognome());
         nuovoUtente.setEmail(body.email());
         nuovoUtente.setUsername(body.username());
-        nuovoUtente.setPassword(body.password());
+        nuovoUtente.setPassword(bcrypt.encode(body.password()));
+        if(body.role() != null){
+            nuovoUtente.setRole(body.role());
+        }
         return utenteRepository.save(nuovoUtente);
     }
 

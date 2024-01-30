@@ -4,10 +4,10 @@ import lombok.Getter;
 
 import java.util.UUID;
 
-@Getter
-public class ProvinciaDTO {
-    String sigla; String provincia; String regione;
+public record ProvinciaDTO (
+    String sigla,
+    String provincia,
+    String regione
+) {
 
-    public ProvinciaDTO(long id) {
-    }
 }
