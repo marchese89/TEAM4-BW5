@@ -27,8 +27,10 @@ public class Indirizzo {
     private TipoIndirizzo tipoIndirizzo;
     @ManyToOne
     @JoinColumn(name = "comune_id")
+    @JsonIgnore
     private Comune comune;
     @ManyToOne
     @JoinColumn(name = "cliente_id")
+    @JsonIgnore
     private Cliente cliente;
 }

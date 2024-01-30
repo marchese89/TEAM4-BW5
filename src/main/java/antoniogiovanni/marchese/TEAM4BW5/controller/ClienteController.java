@@ -21,6 +21,7 @@ public class ClienteController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ClienteResponseDTO saveCliente(@RequestBody @Validated ClienteDTO body, BindingResult validation) throws Exception {
         if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors().stream().map(err -> err.getDefaultMessage()).toList().toString());
