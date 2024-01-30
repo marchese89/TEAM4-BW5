@@ -13,9 +13,8 @@ import lombok.*;
 @ToString
 public class Comune {
     @Id
-    private int progressivoDelComune;
+    private long progressivoDelComune;
 
-    private int codiceProvincia;
     private String denominazione;
 
     @ManyToOne

@@ -1,9 +1,9 @@
 package antoniogiovanni.marchese.TEAM4BW5.controller;
 
-import antoniogiovanni.marchese.TEAM4BW5.Service.ComuneService;
-import antoniogiovanni.marchese.TEAM4BW5.Service.ProvinciaService;
 import antoniogiovanni.marchese.TEAM4BW5.model.Provincia;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ProvinciaDTO;
+import antoniogiovanni.marchese.TEAM4BW5.service.ComuneService;
+import antoniogiovanni.marchese.TEAM4BW5.service.ProvinciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -24,27 +24,24 @@ public class ProvinciaController {
         return provinciaService.getProvincia(page, size, orderBy);
     }
     @GetMapping("/{idProvincia}")
-    public Provincia getProvinciaById(@PathVariable UUID idProvincia){
+    public Provincia getProvinciaById(@PathVariable Long idProvincia){
         return provinciaService.findById(idProvincia);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProvinciaDTO createProvincia(@RequestBody ProvinciaDTO provinciaDTO){
-        Provincia provincia = provinciaService.save(provinciaDTO);
-        return new ProvinciaDTO(provincia.getId());
+    public Provincia createProvincia(@RequestBody ProvinciaDTO provinciaDTO){
+        return provinciaService.save(provinciaDTO);
     }
 
     @PutMapping("/{idProvincia}")
-    public ProvinciaDTO modifyProvincia( @RequestBody ProvinciaDTO provinciaDTO,@PathVariable UUID idProvincia){
+    public Provincia modifyProvincia( @RequestBody ProvinciaDTO provinciaDTO,@PathVariable Long idProvincia){
         Provincia found = provinciaService.findById(idProvincia);
-
-        Provincia provincia = provinciaService.findByIdAndUpdate(idProvincia, provinciaDTO);
-        return new ProvinciaDTO(provincia.getId());
+        return provinciaService.findByIdAndUpdate(idProvincia, provinciaDTO);
     }
     @DeleteMapping("/{idProvincia}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProvincia(@PathVariable UUID idProvincia){
+    public void deleteProvincia(@PathVariable Long idProvincia){
         Provincia found = provinciaService.findById(idProvincia);
         provinciaService.findByIdAndDelete(idProvincia);
     }

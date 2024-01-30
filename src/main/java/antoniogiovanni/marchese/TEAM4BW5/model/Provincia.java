@@ -2,6 +2,7 @@ package antoniogiovanni.marchese.TEAM4BW5.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,8 +17,8 @@ import java.util.UUID;
 @Entity
 public class Provincia {
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     private String sigla;
     private String provincia;
