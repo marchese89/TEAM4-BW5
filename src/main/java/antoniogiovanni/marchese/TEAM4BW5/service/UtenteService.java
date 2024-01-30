@@ -5,6 +5,8 @@ import antoniogiovanni.marchese.TEAM4BW5.exceptions.NotFoundException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Utente;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.UtenteDTO;
 import antoniogiovanni.marchese.TEAM4BW5.repository.UtenteRepository;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,11 +15,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 public class UtenteService {
     @Autowired
     private UtenteRepository utenteRepository;
+
+    @Autowired
+    private Cloudinary cloudinaryUploader;
 
     private PasswordEncoder bcrypt =  new BCryptPasswordEncoder(11);
     public Page<Utente> getUsers(int page, int size, String orderBy){
@@ -64,6 +72,11 @@ public class UtenteService {
 
     public Utente findByEmail(String email) {
         return utenteRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato!"));
+    }
+
+    public String uploadPicture(MultipartFile file) throws IOException {
+       String url = (String) cloudinaryUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+       return url;
     }
 
 }

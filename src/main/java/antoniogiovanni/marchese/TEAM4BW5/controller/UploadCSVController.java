@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -28,6 +29,23 @@ public class UploadCSVController {
 
     @Autowired
     private ComuneService comuneService;
+
+    private HashMap<String,String> corrispProvince;
+
+    public UploadCSVController(){
+        corrispProvince = new HashMap<>();
+        corrispProvince.put("Vibo Valentia","Vibo-Valentia");
+        corrispProvince.put("Reggio Calabria","Reggio-Calabria");
+        corrispProvince.put("Ascoli Piceno","Ascoli-Piceno");
+        corrispProvince.put("Pesaro e Urbino","Pesaro-Urbino");
+        corrispProvince.put("Forlì-Cesena","Forli-Cesena");
+        corrispProvince.put("Reggio nell'Emilia", "Reggio-Emilia");
+        corrispProvince.put("La Spezia","La-Spezia");
+        corrispProvince.put("Bolzano/Bozen","Bolzano");
+        corrispProvince.put("Monza e della Brianza","Monza-Brianza");
+        corrispProvince.put("Valle d'Aosta/Vallée d'Aoste","Aosta");
+        corrispProvince.put("Verbano-Cusio-Ossola","Verbania");
+    }
 
     @PostMapping("/comuni")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
@@ -47,23 +65,34 @@ public class UploadCSVController {
                 } catch (NumberFormatException e) {
 
                 }
-                    if (progressivoComune != null) {
+
                         String nomeComune = columns[2];
                         String provincia = columns[3];
                         Provincia provincia1 = null;
                         try {
                             provincia1 = provinciaService.findByName(provincia);
                         } catch (NotFoundException e) {
+//                            System.out.println("provincia non presente");
+//                            System.out.println(provincia);
+                            try {
+                                provincia1 = provinciaService.findByName(corrispProvince.get(provincia));
+                            }catch (NotFoundException e2){
+                                provinciaService.save(new ProvinciaDTO("",provincia,""));
+                                provincia1 = provinciaService.findByName(corrispProvince.get(provincia));
+                                //throw new NotFoundException("provincia non trovata"+provincia);
+                            }
 
                         }
                         if (provincia1 != null) {
                             Comune comune = new Comune();
                             comune.setProvincia(provincia1);
                             comune.setDenominazione(nomeComune);
-                            comune.setProgressivoDelComune(progressivoComune);
+                            comune.setProgressivoDelComune(progressivoComune != null? progressivoComune:-1);
                             comuneService.save(comune);
+                        }else{
+                            System.out.println("provincia null");
                         }
-                    }
+
                 }
 
         } catch (IOException e) {

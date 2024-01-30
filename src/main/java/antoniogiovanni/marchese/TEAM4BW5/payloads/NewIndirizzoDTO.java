@@ -18,7 +18,6 @@ public record NewIndirizzoDTO(
         @NotEmpty(message = "la località non può essere vuota")
         String localita,
         @NotNull(message = "l'indirizzo deve avere un cap")
-        @NotEmpty(message = "il cap non può essere vuoto")
         int cap,
         @NotNull(message = "l'indirizzo deve avere un comune")
         long idComune,
