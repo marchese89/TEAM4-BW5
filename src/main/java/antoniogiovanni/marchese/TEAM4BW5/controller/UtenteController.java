@@ -11,8 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/users")
@@ -30,6 +31,7 @@ public class UtenteController {
     public Utente findById(@PathVariable long id){
         return utenteService.findById(id);
     }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UtenteResponseDTO createUser(@RequestBody @Validated UtenteDTO newUserPayload, BindingResult validation){
@@ -48,5 +50,11 @@ public class UtenteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findByIdAndDelete(@PathVariable long id){
         utenteService.findByIdAndDelete(id);
+    }
+
+    //Endpoint per upload immagini
+    @PostMapping("/{id}/upload")
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile file, @PathVariable long id) throws IOException {
+        return utenteService.uploadPicture(file);
     }
 }
