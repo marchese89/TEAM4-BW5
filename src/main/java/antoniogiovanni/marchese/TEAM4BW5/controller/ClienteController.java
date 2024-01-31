@@ -84,14 +84,14 @@ public class ClienteController {
         return clienteService.findByProvinciaSedeLegale(provincia, page, size);
     }
 
-    @GetMapping("/sorted-by-provincia")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Cliente> getClientiSortedByProvincia(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ) {
-        return clienteService.findAllOrderByProvincia(page, size);
-    }
+//    @GetMapping("/sorted-by-provincia")
+//    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+//    public Page<Cliente> getClientiSortedByProvincia(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size
+//    ) {
+//        return clienteService.findAllOrderByProvincia(page, size);
+//    }
 
     //-----------------------FILTER
     @GetMapping("/filtered")

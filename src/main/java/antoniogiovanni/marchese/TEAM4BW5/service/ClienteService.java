@@ -100,6 +100,7 @@ public class ClienteService {
                 case "fatturatoAnnuale" -> clienteRepository.findAllByOrderByFatturatoAnnualeAsc(pageable);
                 case "dataInserimento" -> clienteRepository.findAllByOrderByDataInserimentoAsc(pageable);
                 case "dataUltimoContatto" -> clienteRepository.findAllByOrderByDataUltimoContattoAsc(pageable);
+                case "provincia" -> clienteRepository.findAllOrderByProvincia(pageable);
                 default -> throw new IllegalArgumentException("Campo di ordinamento non supportato: " + sortedBy);
             };
         } else {
@@ -108,6 +109,7 @@ public class ClienteService {
                 case "fatturatoAnnuale" -> clienteRepository.findAllByOrderByFatturatoAnnualeDesc(pageable);
                 case "dataInserimento" -> clienteRepository.findAllByOrderByDataInserimentoDesc(pageable);
                 case "dataUltimoContatto" -> clienteRepository.findAllByOrderByDataUltimoContattoDesc(pageable);
+                case "provincia" -> clienteRepository.findAllOrderByProvincia(pageable);
                 default -> throw new IllegalArgumentException("Campo di ordinamento non supportato: " + sortedBy);
             };
         }
@@ -118,10 +120,10 @@ public class ClienteService {
         return clienteRepository.findByProvinciaSedeLegale(provincia, pageable);
     }
 
-    public Page<Cliente> findAllOrderByProvincia(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return clienteRepository.findAllOrderByProvincia(pageable);
-    }
+//    public Page<Cliente> findAllOrderByProvincia(int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        return clienteRepository.findAllOrderByProvincia(pageable);
+//    }
 
     //-----------------------FILTER
 
