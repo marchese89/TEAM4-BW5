@@ -44,11 +44,10 @@ public class FatturaService {
 
     public Fattura save(NewFatturaDTO body) {
         Cliente cliente = clienteService.findById(body.idCliente());
-        long numero = cliente.getFatture().size();
         Fattura newFattura = new Fattura();
         newFattura.setCliente(clienteService.findById(body.idCliente()));
         newFattura.setData(body.data());
-        newFattura.setNumero(numero + 1);
+        newFattura.setNumero(fatturaRepository.findAll().stream().count() + 1);
         newFattura.setImporto(body.importo());
         newFattura.setStatoFattura(body.statoFattura());
         cliente.setDataUltimoContatto(LocalDate.now());
@@ -66,37 +65,68 @@ public class FatturaService {
         return fatturaRepository.save(found);
     }
 
+    public List<Fattura> getFatturaFiltered(Long clienteId, int anno, StatoFattura statoFattura, LocalDate data, LocalDate inizio, LocalDate fine, Double importoMin, Double importoMax, Integer year, Double minImporto, Double maxImporto) {
+        LocalDate startOfYear = (year != null) ? LocalDate.of(year, 1, 1) : null;
+        LocalDate endOfYear = (year != null) ? LocalDate.of(year, 12, 31) : null;
 
-    public List<Fattura> trovaFattureAnnuali(Long clienteId, int anno) {
-        Cliente cliente = clienteService.findById(clienteId);
-        LocalDate inizioAnno = LocalDate.of(anno, 1, 1);
-        LocalDate fineAnno = LocalDate.of(anno, 12, 31);
-
-        return fatturaRepository.findByClienteAndDataBetweenOrderByDataAsc(cliente, inizioAnno, fineAnno);
-
+        return (clienteId != null && anno != 0) ?
+                fatturaRepository.findByClienteAndDataBetweenOrderByDataAsc(clienteService.findById(clienteId), LocalDate.of(anno, 1, 1), LocalDate.of(anno, 12, 31))
+                : (clienteId != null) ?
+                fatturaRepository.findByClienteOrderByDataAsc(clienteService.findById(clienteId))
+                : (statoFattura != null) ?
+                fatturaRepository.findByStatoFatturaOrderByDataAsc(statoFattura)
+                : (data != null) ?
+                fatturaRepository.findByDataOrderByDataAsc(data)
+                : (startOfYear != null && endOfYear != null) ?
+                fatturaRepository.findByDataBetween(startOfYear, endOfYear)
+                : (inizio != null && fine != null) ?
+                (importoMin != null && importoMax != null) ?
+                        fatturaRepository.findByDataBetweenAndImportoBetweenOrderByDataAsc(inizio, fine, importoMin, importoMax)
+                        : fatturaRepository.findByDataBetweenOrderByDataAsc(inizio, fine)
+                : (minImporto != null && maxImporto != null) ?
+                fatturaRepository.findByImportoBetween(minImporto, maxImporto)
+                : fatturaRepository.findAll();
     }
 
-    public List<Fattura> trovaFatturePerCliente(Long clienteId) {
-        Cliente cliente = clienteService.findById(clienteId);
-        return fatturaRepository.findByClienteOrderByDataAsc(cliente);
-    }
-
-    public List<Fattura> trovaFatturePerStato(StatoFattura statoFattura) {
-        return fatturaRepository.findByStatoFatturaOrderByDataAsc(statoFattura);
-    }
-
-    public List<Fattura> trovaFatturePerData(LocalDate data) {
-        return fatturaRepository.findByDataOrderByDataAsc(data);
-    }
-
-    public List<Fattura> trovaFatturePerIntervalloData(LocalDate inizio, LocalDate fine) {
-        return fatturaRepository.findByDataBetweenOrderByDataAsc(inizio, fine);
-    }
-
-    public List<Fattura> trovaFatturePerIntervalloDataEImporto(LocalDate inizio, LocalDate fine, Double importoMin, Double importoMax) {
-        return fatturaRepository.findByDataBetweenAndImportoBetweenOrderByDataAsc(inizio, fine, importoMin, importoMax);
-    }
-
+//    public List<Fattura> trovaFattureAnnuali(Long clienteId, int anno) {
+//        Cliente cliente = clienteService.findById(clienteId);
+//        LocalDate inizioAnno = LocalDate.of(anno, 1, 1);
+//        LocalDate fineAnno = LocalDate.of(anno, 12, 31);
+//
+//        return fatturaRepository.findByClienteAndDataBetweenOrderByDataAsc(cliente, inizioAnno, fineAnno);
+//
+//    }
+//
+//    public List<Fattura> trovaFatturePerCliente(Long clienteId) {
+//        Cliente cliente = clienteService.findById(clienteId);
+//        return fatturaRepository.findByClienteOrderByDataAsc(cliente);
+//    }
+//
+//    public List<Fattura> trovaFatturePerStato(StatoFattura statoFattura) {
+//        return fatturaRepository.findByStatoFatturaOrderByDataAsc(statoFattura);
+//    }
+//
+//    public List<Fattura> trovaFatturePerData(LocalDate data) {
+//        return fatturaRepository.findByDataOrderByDataAsc(data);
+//    }
+//
+//    public List<Fattura> trovaFatturePerIntervalloData(LocalDate inizio, LocalDate fine) {
+//        return fatturaRepository.findByDataBetweenOrderByDataAsc(inizio, fine);
+//    }
+//
+//    public List<Fattura> trovaFatturePerIntervalloDataEImporto(LocalDate inizio, LocalDate fine, Double importoMin, Double importoMax) {
+//        return fatturaRepository.findByDataBetweenAndImportoBetweenOrderByDataAsc(inizio, fine, importoMin, importoMax);
+//    }
+//
+//    public List<Fattura> getFattureByYear(Integer year) {
+//        LocalDate startOfYear = LocalDate.of(year, 1, 1);
+//        LocalDate endOfYear = LocalDate.of(year, 12, 31);
+//        return fatturaRepository.findByDataBetween(startOfYear, endOfYear);
+//    }
+//
+//    public List<Fattura> getFattureByImportoRange(Double minImporto, Double maxImporto) {
+//        return fatturaRepository.findByImportoBetween(minImporto, maxImporto);
+//    }
 // vedi
 
 }

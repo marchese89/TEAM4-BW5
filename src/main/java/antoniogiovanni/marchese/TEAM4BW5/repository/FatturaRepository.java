@@ -24,4 +24,7 @@ public interface FatturaRepository extends JpaRepository<Fattura, Long> {
 
     List<Fattura> findByDataBetweenAndImportoBetweenOrderByDataAsc(LocalDate inizio, LocalDate fine, Double importoMin, Double importoMax);
 
+    List<Fattura> findByDataBetween(LocalDate startOfYear, LocalDate endOfYear);
+
+    List<Fattura> findByImportoBetween(Double minImporto, Double maxImporto);
 }
