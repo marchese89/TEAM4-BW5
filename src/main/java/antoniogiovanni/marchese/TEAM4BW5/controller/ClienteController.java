@@ -1,9 +1,12 @@
 package antoniogiovanni.marchese.TEAM4BW5.controller;
 
+import antoniogiovanni.marchese.TEAM4BW5.config.MailgunSender;
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
+import antoniogiovanni.marchese.TEAM4BW5.exceptions.NotFoundException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Cliente;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ClienteDTO;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ClienteResponseDTO;
+import antoniogiovanni.marchese.TEAM4BW5.payloads.EmailDTO;
 import antoniogiovanni.marchese.TEAM4BW5.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,12 +17,16 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/cliente")
 public class ClienteController {
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    private MailgunSender mailgunSender;
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
@@ -109,5 +116,18 @@ public class ClienteController {
         return clienteService.getClienteFiltered(page, size, sort, fatturatoAnnuale, dataInserimentoAfter, dataUltimoContattoAfter, greaterOrLess, parteDelNome);
     }
 
+
+    //-----------------------------------------INVIO EMAIL AL CLIENTE
+    @PostMapping("/{clienteId}/send-email")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void sendEmailToCliente(@PathVariable long clienteId, @RequestBody EmailDTO emailDTO) {
+        Cliente cliente = clienteService.findById(clienteId);
+        if (cliente != null) {
+            mailgunSender.sendEmail(cliente, emailDTO);
+        } else {
+            // Gestisci il caso in cui il cliente non sia stato trovato
+            throw new NotFoundException("Cliente non trovato con l'ID specificato");
+        }
+    }
 
 }
