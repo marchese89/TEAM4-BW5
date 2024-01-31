@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 public record NewFatturaDTO(
         @NotNull(message ="Data obbligatorio" )
         LocalDate data,
+        @NotNull(message ="Id cliente obbligatorio" )
+        Long idCliente,
         @NotNull(message ="Importo fattura obbligatorio" )
         Double importo,
         @NotNull(message ="Numero obbligatorio" )

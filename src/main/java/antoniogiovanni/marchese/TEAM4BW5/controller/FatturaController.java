@@ -5,6 +5,7 @@ import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Cliente;
 import antoniogiovanni.marchese.TEAM4BW5.model.Fattura;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.NewFatturaDTO;
+import antoniogiovanni.marchese.TEAM4BW5.service.ClienteService;
 import antoniogiovanni.marchese.TEAM4BW5.service.FatturaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,9 @@ import java.util.List;
 public class FatturaController {
     @Autowired
     private FatturaService fatturaService;
+
+    @Autowired
+    private ClienteService clienteService;
 
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     @GetMapping("/{fatturaId}")

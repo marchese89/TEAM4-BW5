@@ -46,7 +46,9 @@ public class FatturaService {
     public Fattura save(NewFatturaDTO body) {
 
         Fattura newFattura = new Fattura();
+        newFattura.setCliente(clienteService.findById(body.idCliente()));
         newFattura.setData(body.data());
+        newFattura.setNumero(body.numero());
         newFattura.setImporto(body.importo());
         return fatturaRepository.save(newFattura);
     }
