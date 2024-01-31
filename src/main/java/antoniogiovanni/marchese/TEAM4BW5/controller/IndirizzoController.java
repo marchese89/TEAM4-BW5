@@ -1,6 +1,7 @@
 package antoniogiovanni.marchese.TEAM4BW5.controller;
 
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
+import antoniogiovanni.marchese.TEAM4BW5.exceptions.UnauthorizedException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Indirizzo;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.NewIndirizzoDTO;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ResponseDTO;
@@ -39,8 +40,14 @@ public class IndirizzoController {
         if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors().stream().map(err -> err.getDefaultMessage()).toList().toString());
         }
-        Indirizzo indirizzo = indirizzoService.save(indirizzoDTO);
-        return new ResponseDTO(indirizzo.getId());
+        //dobbiamo verificare che non ci siano altri indirizzi dello stesso tipo per lo stesso cliente
+        int numIndirizziStessoTipo = indirizzoService.countByUserIdAndType(indirizzoDTO.idCliente(), indirizzoDTO.tipoIndirizzo());
+        if(numIndirizziStessoTipo == 0) {
+            Indirizzo indirizzo = indirizzoService.save(indirizzoDTO);
+            return new ResponseDTO(indirizzo.getId());
+        }else{
+            throw new UnauthorizedException("esiste già un indirizzo dello stesso tipo per questo utente e non puoi crearne altri");
+        }
     }
     @PutMapping("/{idIndirizzo}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")

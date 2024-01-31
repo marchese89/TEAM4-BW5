@@ -7,7 +7,7 @@ import jakarta.validation.constraints.*;
 public record ClienteDTO(@NotEmpty(message = "La ragione sociale è un campo obbligatorio!")
                          String ragioneSociale,
                          @NotEmpty(message = "La partita IVA è obbligatoria")
-                         @Size(min = 11, max = 11, message = "La lunghezza deve essere di 11 caratteri")
+                         @Size(min = 13, max = 13, message = "La lunghezza deve essere di 11 caratteri")
                          String partitaIva,
                          @Email(message = "L'indirizzo inserito non è un indirizzo valido")
                          @NotEmpty(message = "La mail è un campo obbligatorio!")
