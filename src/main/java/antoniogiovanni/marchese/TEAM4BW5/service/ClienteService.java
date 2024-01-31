@@ -90,89 +90,63 @@ public class ClienteService {
         clienteRepository.delete(found);
     }
 
-    //----------------------------------------------- ORDER BY NOMECONTATTO ASC
 
-    public Page<Cliente> getClienteSortedByNomeContattoAsc(int page, int size, String sort) {
+    public Page<Cliente> getClienteSorted(int page, int size, String sortedBy, String sortOrder) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortedBy));
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-
-        return clienteRepository.findAllByOrderByNomeContattoAsc(pageable);
+        if (sortOrder.equals("asc")) {
+            return switch (sortedBy) {
+                case "nomeContatto" -> clienteRepository.findAllByOrderByNomeContattoAsc(pageable);
+                case "fatturatoAnnuale" -> clienteRepository.findAllByOrderByFatturatoAnnualeAsc(pageable);
+                case "dataInserimento" -> clienteRepository.findAllByOrderByDataInserimentoAsc(pageable);
+                case "dataUltimoContatto" -> clienteRepository.findAllByOrderByDataUltimoContattoAsc(pageable);
+                case "provincia" -> clienteRepository.findAllOrderByProvincia(pageable);
+                default -> throw new IllegalArgumentException("Campo di ordinamento non supportato: " + sortedBy);
+            };
+        } else {
+            return switch (sortedBy) {
+                case "nomeContatto" -> clienteRepository.findAllByOrderByNomeContattoDesc(pageable);
+                case "fatturatoAnnuale" -> clienteRepository.findAllByOrderByFatturatoAnnualeDesc(pageable);
+                case "dataInserimento" -> clienteRepository.findAllByOrderByDataInserimentoDesc(pageable);
+                case "dataUltimoContatto" -> clienteRepository.findAllByOrderByDataUltimoContattoDesc(pageable);
+                case "provincia" -> clienteRepository.findAllOrderByProvincia(pageable);
+                default -> throw new IllegalArgumentException("Campo di ordinamento non supportato: " + sortedBy);
+            };
+        }
     }
 
-//    public List<Cliente> getClienteSortedByNomeContatto() {
-//        return clienteRepository.findAll(Sort.by("nomeContatto"));
+    public Page<Cliente> findByProvinciaSedeLegale(String provincia, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return clienteRepository.findByProvinciaSedeLegale(provincia, pageable);
+    }
+
+//    public Page<Cliente> findAllOrderByProvincia(int page, int size) {
+//        Pageable pageable = PageRequest.of(page, size);
+//        return clienteRepository.findAllOrderByProvincia(pageable);
 //    }
 
-
-    //----------------------------------------------- ORDER BY NOMECONTATTO DESC
-
-    public Page<Cliente> getClienteSortedByNomeContattoDesc(int page, int size, String sort) {
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-
-        return clienteRepository.findAllByOrderByNomeContattoDesc(pageable);
-    }
-
-    //----------------------------------------------- ORDER BY FATTURATOANNUALE ASC
-
-    public Page<Cliente> getClienteSortedByFatturatoAnnualeAsc(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return clienteRepository.findAllByOrderByFatturatoAnnualeAsc(pageable);
-    }
-
-    //----------------------------------------------- ORDER BY FATTURATOANNUALE DESC
-
-    public Page<Cliente> getClienteSortedByFatturatoAnnualeDesc(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return clienteRepository.findAllByOrderByFatturatoAnnualeDesc(pageable);
-    }
-
-    //----------------------------------------------- ORDER BY DATAINSERIMENTO ASC
-
-    public Page<Cliente> getClienteSortedByDataInserimentoAsc(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return clienteRepository.findAllByOrderByDataInserimentoAsc(pageable);
-    }
-
-    //----------------------------------------------- ORDER BY DATAINSERIMENTO DESC
-
-    public Page<Cliente> getClienteSortedByDataInserimentoDesc(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return clienteRepository.findAllByOrderByDataInserimentoDesc(pageable);
-    }
-
-    //----------------------------------------------- ORDER BY DATAULTIMOCONTATTO ASC
-
-    public Page<Cliente> getClienteSortedByDataUltimoContattoAsc(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return clienteRepository.findAllByOrderByDataUltimoContattoAsc(pageable);
-    }
-
-    //----------------------------------------------- ORDER BY DATAULTIMOCONTATTO DESC
-
-    public Page<Cliente> getClienteSortedByDataUltimoContattoDesc(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return clienteRepository.findAllByOrderByDataUltimoContattoDesc(pageable);
-    }
-
     //-----------------------FILTER
-    //----------------------------------------------- FILTER BY FATTURATO MAGGIORE
 
-    public Page<Cliente> findByFatturatoAnnualeGreaterThanEqual(Double fatturato, int page, int size, String sort) {
+    public Page<Cliente> getClienteFiltered(int page, int size, String sort, Double fatturatoAnnuale, LocalDate dataInserimentoAfter, LocalDate dataUltimoContattoAfter, String greaterOrLess, String parteDelNome) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
-        return clienteRepository.findByFatturatoAnnualeGreaterThanEqual(fatturato, pageable);
+
+        if (fatturatoAnnuale != null) {
+            if (greaterOrLess.equals("greater")) {
+                return clienteRepository.findByFatturatoAnnualeGreaterThanEqual(fatturatoAnnuale, pageable);
+            } else if (greaterOrLess.equals("less")) {
+                return clienteRepository.findByFatturatoAnnualeLessThanEqual(fatturatoAnnuale, pageable);
+            } else {
+                throw new IllegalArgumentException("Campo di ordinamento non supportato: " + greaterOrLess);
+            }
+        } else if (dataInserimentoAfter != null) {
+            return clienteRepository.findByDataInserimentoAfter(dataInserimentoAfter, pageable);
+        } else if (dataUltimoContattoAfter != null) {
+            return clienteRepository.findByDataUltimoContattoAfter(dataUltimoContattoAfter, pageable);
+        } else if (parteDelNome != null) {
+            return clienteRepository.findByNomeContattoContainingIgnoreCase(parteDelNome, pageable);
+        } else {
+            return clienteRepository.findAll(pageable);
+        }
     }
 
-    //----------------------------------------------- FILTER BY FATTURATO MINORE
-    public Page<Cliente> findByFatturatoAnnualeLessThanEqual(Double fatturato, int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
-        return clienteRepository.findByFatturatoAnnualeLessThanEqual(fatturato, pageable);
-    }
-
-    //----------------------------------------------- FILTER BY INSERIMENTO AFTER
-
-    public Page<Cliente> findByDataInserimentoAfter(LocalDate dataInserimento, int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return clienteRepository.findByDataInserimentoAfter(dataInserimento, pageable);
-    }
 }

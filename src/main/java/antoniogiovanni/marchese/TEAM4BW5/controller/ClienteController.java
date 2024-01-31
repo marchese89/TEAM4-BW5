@@ -1,9 +1,12 @@
 package antoniogiovanni.marchese.TEAM4BW5.controller;
 
+import antoniogiovanni.marchese.TEAM4BW5.config.MailgunSender;
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
+import antoniogiovanni.marchese.TEAM4BW5.exceptions.NotFoundException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Cliente;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ClienteDTO;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ClienteResponseDTO;
+import antoniogiovanni.marchese.TEAM4BW5.payloads.EmailDTO;
 import antoniogiovanni.marchese.TEAM4BW5.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,11 +16,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/cliente")
 public class ClienteController {
     @Autowired
     private ClienteService clienteService;
+
+    @Autowired
+    private MailgunSender mailgunSender;
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
@@ -62,97 +71,63 @@ public class ClienteController {
         clienteService.findByIdAndDelete(clienteId);
     }
 
-    //----------------------------------------------- ORDER BY NOMECONTATTO ASC
-    @GetMapping("/sorted-name-asc")
+    //-----------------------SORTED
+    @GetMapping("/sorted")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Cliente> getClienteSortedByNomeContattoAsc(@RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "nomeContatto") String sortBy) {
-        return clienteService.getClienteSortedByNomeContattoAsc(page, size, sortBy);
+    public Page<Cliente> getClienteSorted(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "10") int size,
+                                          @RequestParam(defaultValue = "nomeContatto") String sortedBy,
+                                          @RequestParam(defaultValue = "asc") String sortOrder) {
+        return clienteService.getClienteSorted(page, size, sortedBy, sortOrder);
     }
 
-//    @GetMapping("/sorted-name")
-//    public List<Cliente> getClienteSortedByNomeContatto() {
-//        return clienteService.getClienteSortedByNomeContatto();
+    @GetMapping("/provincia-sede-legale")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    public Page<Cliente> getClientiByProvinciaSedeLegale(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam String provincia
+    ) {
+        return clienteService.findByProvinciaSedeLegale(provincia, page, size);
+    }
+
+//    @GetMapping("/sorted-by-provincia")
+//    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+//    public Page<Cliente> getClientiSortedByProvincia(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size
+//    ) {
+//        return clienteService.findAllOrderByProvincia(page, size);
 //    }
 
-    //----------------------------------------------- ORDER BY NOMECONTATTO DESC
-
-    @GetMapping("/sorted-name-desc")
+    //-----------------------FILTER
+    @GetMapping("/filtered")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Cliente> getClienteSortedByNomeContattoDesc(@RequestParam(defaultValue = "0") int page,
-                                                            @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "nomeContatto") String sortBy) {
-        return clienteService.getClienteSortedByNomeContattoDesc(page, size, sortBy);
+    public Page<Cliente> getClienteFiltered(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sort,
+            @RequestParam(required = false) Double fatturatoAnnuale,
+            @RequestParam(required = false) LocalDate dataInserimentoAfter,
+            @RequestParam(required = false) LocalDate dataUltimoContattoAfter,
+            @RequestParam(required = false) String parteDelNome,
+            @RequestParam(required = false) String greaterOrLess
+    ) {
+        return clienteService.getClienteFiltered(page, size, sort, fatturatoAnnuale, dataInserimentoAfter, dataUltimoContattoAfter, greaterOrLess, parteDelNome);
     }
 
-    //----------------------------------------------- ORDER BY FATTURATOANNUALE ASC
 
-    @GetMapping("/sorted-fatt-asc")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Cliente> getClienteSortedByFatturatoAnnualeAsc(@RequestParam(defaultValue = "0") int page,
-                                                               @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "fatturatoAnnuale") String sortBy) {
-        return clienteService.getClienteSortedByFatturatoAnnualeAsc(page, size, sortBy);
-    }
-    //----------------------------------------------- ORDER BY FATTURATOANNUALE DESC
-
-    @GetMapping("/sorted-fatt-desc")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Cliente> getClienteSortedByFatturatoAnnualeDesc(@RequestParam(defaultValue = "0") int page,
-                                                                @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "fatturatoAnnuale") String sortBy) {
-        return clienteService.getClienteSortedByFatturatoAnnualeDesc(page, size, sortBy);
-    }
-
-    //----------------------------------------------- ORDER BY DATAINSERIMENTO ASC
-
-    @GetMapping("/sorted-data-ins-asc")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Cliente> getClienteSortedByDataInserimentoAsc(@RequestParam(defaultValue = "0") int page,
-                                                              @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "dataInserimento") String sortBy) {
-        return clienteService.getClienteSortedByDataInserimentoAsc(page, size, sortBy);
-    }
-
-    //----------------------------------------------- ORDER BY DATAINSERIMENTO DESC
-
-    @GetMapping("/sorted-data-ins-desc")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Cliente> getClienteSortedByDataInserimentoDesc(@RequestParam(defaultValue = "0") int page,
-                                                               @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "dataInserimento") String sortBy) {
-        return clienteService.getClienteSortedByDataInserimentoDesc(page, size, sortBy);
-    }
-
-    //----------------------------------------------- ORDER BY DATAULTIMOCONTATTO ASC
-
-    @GetMapping("/sorted-data-cont-asc")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Cliente> getClienteSortedByDataUltimoContattoAsc(@RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "dataUltimoContatto") String sortBy) {
-        return clienteService.getClienteSortedByDataUltimoContattoAsc(page, size, sortBy);
-    }
-
-    //----------------------------------------------- ORDER BY DATAULTIMOCONTATTO DESC
-
-    @GetMapping("/sorted-data-cont-desc")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Cliente> getClienteSortedByDataUltimoContattoDesc(@RequestParam(defaultValue = "0") int page,
-                                                                  @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "dataUltimoContatto") String sortBy) {
-        return clienteService.getClienteSortedByDataUltimoContattoDesc(page, size, sortBy);
-    }
-//-----------------------FILTER
-    //----------------------------------------------- FILTER BY FATTURATO MAGGIORE
-
-    @GetMapping("/filter-fatt-great")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Cliente> findByFatturatoAnnualeGreaterThanEqual(@RequestParam(defaultValue = "0") int page,
-                                                                @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "fatturatoAnnuale") String sortBy, @RequestParam double fatturato) {
-        return clienteService.findByFatturatoAnnualeGreaterThanEqual(fatturato, page, size, sortBy);
-    }
-
-    //----------------------------------------------- FILTER BY FATTURATO MINORE
-
-    @GetMapping("/filter-fatt-less")
-    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Cliente> findByFatturatoAnnualeLessThanEqual(@RequestParam(defaultValue = "0") int page,
-                                                             @RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "fatturatoAnnuale") String sortBy, @RequestParam double fatturato) {
-        return clienteService.findByFatturatoAnnualeLessThanEqual(fatturato, page, size, sortBy);
+    //-----------------------------------------INVIO EMAIL AL CLIENTE
+    @PostMapping("/{clienteId}/send-email")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public void sendEmailToCliente(@PathVariable long clienteId, @RequestBody EmailDTO emailDTO) {
+        Cliente cliente = clienteService.findById(clienteId);
+        if (cliente != null) {
+            mailgunSender.sendEmail(cliente, emailDTO);
+        } else {
+            // Gestisci il caso in cui il cliente non sia stato trovato
+            throw new NotFoundException("Cliente non trovato con l'ID specificato");
+        }
     }
 
 }
