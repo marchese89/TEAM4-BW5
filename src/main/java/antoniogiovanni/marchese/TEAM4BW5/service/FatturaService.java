@@ -1,11 +1,16 @@
 package antoniogiovanni.marchese.TEAM4BW5.service;
 
+import antoniogiovanni.marchese.TEAM4BW5.enums.StatoFattura;
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.NotFoundException;
+import antoniogiovanni.marchese.TEAM4BW5.model.Cliente;
 import antoniogiovanni.marchese.TEAM4BW5.model.Fattura;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.NewFatturaDTO;
 import antoniogiovanni.marchese.TEAM4BW5.repository.FatturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 
 @Service
@@ -13,6 +18,8 @@ public class FatturaService {
     @Autowired
     private FatturaRepository fatturaRepository;
 
+    @Autowired
+    private ClienteService clienteService;
 
     public Fattura findById(Long id) {
         return fatturaRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
@@ -38,6 +45,38 @@ public class FatturaService {
         found.setImporto(body.getImporto());
         return fatturaRepository.save(found);
     }
+
+
+    public List<Fattura> trovaFattureAnnuali(Long clienteId, int anno) {
+        Cliente cliente = clienteService.findById(clienteId);
+        LocalDate inizioAnno = LocalDate.of(anno, 1, 1);
+        LocalDate fineAnno = LocalDate.of(anno, 12, 31);
+
+        return fatturaRepository.findByClienteAndDataBetweenOrderByDataAsc(cliente, inizioAnno, fineAnno);
+
+    }
+
+    public List<Fattura> trovaFatturePerCliente(Long clienteId) {
+        Cliente cliente = clienteService.findById(clienteId);
+        return fatturaRepository.findByClienteOrderByDataAsc(cliente);
+    }
+
+    public List<Fattura> trovaFatturePerStato(StatoFattura statoFattura) {
+        return fatturaRepository.findByStatoFatturaOrderByDataAsc(statoFattura);
+    }
+
+    public List<Fattura> trovaFatturePerData(LocalDate data) {
+        return fatturaRepository.findByDataOrderByDataAsc(data);
+    }
+
+    public List<Fattura> trovaFatturePerIntervalloData(LocalDate inizio, LocalDate fine) {
+        return fatturaRepository.findByDataBetweenOrderByDataAsc(inizio, fine);
+    }
+
+    public List<Fattura> trovaFatturePerIntervalloDataEImporto(LocalDate inizio, LocalDate fine, Double importoMin, Double importoMax) {
+        return fatturaRepository.findByDataBetweenAndImportoBetweenOrderByDataAsc(inizio, fine, importoMin, importoMax);
+    }
+
 
 
 }
