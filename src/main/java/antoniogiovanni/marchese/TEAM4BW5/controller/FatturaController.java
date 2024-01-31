@@ -2,9 +2,9 @@ package antoniogiovanni.marchese.TEAM4BW5.controller;
 
 import antoniogiovanni.marchese.TEAM4BW5.enums.StatoFattura;
 import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
-import antoniogiovanni.marchese.TEAM4BW5.model.Cliente;
 import antoniogiovanni.marchese.TEAM4BW5.model.Fattura;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.NewFatturaDTO;
+import antoniogiovanni.marchese.TEAM4BW5.payloads.NewFatturaResponseDTO;
 import antoniogiovanni.marchese.TEAM4BW5.service.ClienteService;
 import antoniogiovanni.marchese.TEAM4BW5.service.FatturaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import antoniogiovanni.marchese.TEAM4BW5.payloads.NewFatturaResponseDTO;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -48,8 +47,7 @@ public class FatturaController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
-    public NewFatturaResponseDTO createFattura(@RequestBody @Validated NewFatturaDTO newFatturaPayload, BindingResult validation)
-    {
+    public NewFatturaResponseDTO createFattura(@RequestBody @Validated NewFatturaDTO newFatturaPayload, BindingResult validation) {
         System.out.println(validation);
         if (validation.hasErrors()) {
             throw new BadRequestException(validation.getAllErrors().stream().map(err -> err.getDefaultMessage()).toList().toString());
@@ -60,7 +58,7 @@ public class FatturaController {
 
     @PutMapping("/{fatturaId}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public Fattura getFatturaByIdAndUpdate(@PathVariable Long fatturaId, @RequestBody Fattura modifiedFatturaPayload) {
+    public Fattura getFatturaByIdAndUpdate(@PathVariable Long fatturaId, @RequestBody NewFatturaDTO modifiedFatturaPayload) {
         return fatturaService.findByIdAndUpdate(fatturaId, modifiedFatturaPayload);
     }
 
@@ -70,7 +68,6 @@ public class FatturaController {
     public void getFatturaByIdAndDelete(@PathVariable Long fatturaId) {
         fatturaService.findByIdAndDelete(fatturaId);
     }
-
 
 
     @GetMapping("/annuali/{clienteId}/{anno}")

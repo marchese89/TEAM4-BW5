@@ -26,7 +26,6 @@ public class FatturaService {
     private ClienteService clienteService;
 
 
-
     public Page<Fattura> getFattura(int page, int size, String orderBy) {
         if (size >= 100) size = 100;
         Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
@@ -44,19 +43,26 @@ public class FatturaService {
     }
 
     public Fattura save(NewFatturaDTO body) {
-
+        Cliente cliente = clienteService.findById(body.idCliente());
+        long numero = cliente.getFatture().size();
         Fattura newFattura = new Fattura();
         newFattura.setCliente(clienteService.findById(body.idCliente()));
         newFattura.setData(body.data());
-        newFattura.setNumero(body.numero());
+        newFattura.setNumero(numero + 1);
         newFattura.setImporto(body.importo());
+        newFattura.setStatoFattura(body.statoFattura());
+        cliente.setDataUltimoContatto(LocalDate.now());
         return fatturaRepository.save(newFattura);
     }
 
-    public Fattura findByIdAndUpdate(Long id, Fattura body) {
+    public Fattura findByIdAndUpdate(Long id, NewFatturaDTO body) {
+        Cliente cliente = clienteService.findById(body.idCliente());
         Fattura found = this.findById(id);
-        found.setData(body.getData());
-        found.setImporto(body.getImporto());
+        found.setCliente(clienteService.findById(body.idCliente()));
+        found.setData(body.data());
+        found.setImporto(body.importo());
+        found.setStatoFattura(body.statoFattura());
+        cliente.setDataUltimoContatto(LocalDate.now());
         return fatturaRepository.save(found);
     }
 

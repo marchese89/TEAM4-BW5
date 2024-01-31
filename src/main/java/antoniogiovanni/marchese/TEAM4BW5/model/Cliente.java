@@ -1,6 +1,7 @@
 package antoniogiovanni.marchese.TEAM4BW5.model;
 
 import antoniogiovanni.marchese.TEAM4BW5.enums.TipoCliente;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,6 +40,7 @@ public class Cliente {
     private List<Indirizzo> indirizzi;
 
     @OneToMany(mappedBy = "cliente")
+    @JsonIgnoreProperties("cliente")
     private List<Fattura> fatture;
 
 }

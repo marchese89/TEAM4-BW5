@@ -1,6 +1,7 @@
 package antoniogiovanni.marchese.TEAM4BW5.model;
 
 import antoniogiovanni.marchese.TEAM4BW5.enums.StatoFattura;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,10 +26,12 @@ public class Fattura {
     @Column(name = "numero")
     private Long numero;
     @Column(name = "stato_fattura")
+    @Enumerated(EnumType.STRING)
     private StatoFattura statoFattura;
 
 
     @ManyToOne
     @JoinColumn(name = "cliente_fattura")
+    @JsonIgnoreProperties("fatture")
     private Cliente cliente;
 }

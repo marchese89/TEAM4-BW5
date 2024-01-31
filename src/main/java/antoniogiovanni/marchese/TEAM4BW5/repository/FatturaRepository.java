@@ -15,9 +15,13 @@ public interface FatturaRepository extends JpaRepository<Fattura, Long> {
     List<Fattura> findByClienteAndDataBetweenOrderByDataAsc(Cliente cliente, LocalDate inizioAnno, LocalDate fineAnno);
 
     List<Fattura> findByClienteOrderByDataAsc(Cliente cliente);
+
     List<Fattura> findByStatoFatturaOrderByDataAsc(StatoFattura statoFattura);
+
     List<Fattura> findByDataOrderByDataAsc(LocalDate data);
+
     List<Fattura> findByDataBetweenOrderByDataAsc(LocalDate inizio, LocalDate fine);
+
     List<Fattura> findByDataBetweenAndImportoBetweenOrderByDataAsc(LocalDate inizio, LocalDate fine, Double importoMin, Double importoMax);
 
 }
