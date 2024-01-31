@@ -8,6 +8,7 @@ import antoniogiovanni.marchese.TEAM4BW5.service.ComuneService;
 import antoniogiovanni.marchese.TEAM4BW5.service.ProvinciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,9 @@ public class UploadCSVController {
 
     private HashMap<String,String> corrispProvince;
 
+    @Autowired
+    private final JdbcTemplate jdbcTemplate = new JdbcTemplate();
+
     public UploadCSVController(){
         corrispProvince = new HashMap<>();
         corrispProvince.put("Vibo Valentia","Vibo-Valentia");
@@ -54,6 +58,8 @@ public class UploadCSVController {
         if(file.isEmpty()){
             return;
         }
+        jdbcTemplate.execute("DELETE FROM public.comune WHERE id >= 1");
+        jdbcTemplate.execute("ALTER SEQUENCE comune_id_seq RESTART WITH 1");
         try (Scanner scanner = new Scanner(file.getInputStream())) {
             scanner.nextLine();//togliamo la prima riga
             while (scanner.hasNextLine()) {
@@ -106,7 +112,8 @@ public class UploadCSVController {
         if(file.isEmpty()){
             return;
         }
-
+        jdbcTemplate.execute("DELETE FROM public.provincia WHERE id >= 1");
+        jdbcTemplate.execute("ALTER SEQUENCE provincia_id_seq RESTART WITH 1");
         try (Scanner scanner = new Scanner(file.getInputStream())) {
             scanner.nextLine();//togliamo la prima riga
             while (scanner.hasNextLine()) {
