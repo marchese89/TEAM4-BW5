@@ -7,6 +7,7 @@ import antoniogiovanni.marchese.TEAM4BW5.model.Fattura;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.NewFatturaDTO;
 import antoniogiovanni.marchese.TEAM4BW5.service.FatturaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,6 +31,15 @@ public class FatturaController {
     public Fattura getFatturaById(@PathVariable Long fatturaId) {
         return fatturaService.findById(fatturaId);
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    @GetMapping
+    public Page<Fattura> getFattura(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "10") int size,
+                                    @RequestParam(defaultValue = "id") String orderBy) {
+        return fatturaService.getFattura(page, size, orderBy);
+    }
+
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('ADMIN')")

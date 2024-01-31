@@ -1,5 +1,6 @@
 package antoniogiovanni.marchese.TEAM4BW5.payloads;
 
+import antoniogiovanni.marchese.TEAM4BW5.enums.StatoFattura;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
@@ -10,7 +11,9 @@ public record NewFatturaDTO(
         LocalDate data,
         @NotNull(message ="Importo fattura obbligatorio" )
         Double importo,
-        @NotNull(message ="Id obbligatorio" )
-        Long id
+        @NotNull(message ="Numero obbligatorio" )
+        Long numero,
+        @NotNull(message ="Stato fattura obbligatorio" )
+        StatoFattura statoFattura
 ){
 }

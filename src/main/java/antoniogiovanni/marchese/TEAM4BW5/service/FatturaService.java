@@ -7,6 +7,10 @@ import antoniogiovanni.marchese.TEAM4BW5.model.Fattura;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.NewFatturaDTO;
 import antoniogiovanni.marchese.TEAM4BW5.repository.FatturaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,6 +24,15 @@ public class FatturaService {
 
     @Autowired
     private ClienteService clienteService;
+
+
+
+    public Page<Fattura> getFattura(int page, int size, String orderBy) {
+        if (size >= 100) size = 100;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(orderBy));
+        return fatturaRepository.findAll(pageable);
+    }
+
 
     public Fattura findById(Long id) {
         return fatturaRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
@@ -35,7 +48,6 @@ public class FatturaService {
         Fattura newFattura = new Fattura();
         newFattura.setData(body.data());
         newFattura.setImporto(body.importo());
-        newFattura.setId(body.id());
         return fatturaRepository.save(newFattura);
     }
 
