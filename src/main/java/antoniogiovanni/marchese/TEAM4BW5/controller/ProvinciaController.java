@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -24,6 +25,11 @@ public class ProvinciaController {
                                        @RequestParam(defaultValue = "10") int size,
                                        @RequestParam(defaultValue = "id") String orderBy) {
         return provinciaService.getProvincia(page, size, orderBy);
+    }
+    @GetMapping("/noPage")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    public List<Provincia> getProvinceNoPage() {
+        return provinciaService.findAllNoPage();
     }
     @GetMapping("/{idProvincia}")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")

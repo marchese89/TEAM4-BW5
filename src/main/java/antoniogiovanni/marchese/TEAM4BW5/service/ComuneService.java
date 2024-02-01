@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ComuneService {
 
@@ -49,6 +51,10 @@ public class ComuneService {
         public void findByIdAndDelete(long id) {
                 Comune found = this.findById(id);
                 comuneRepository.delete(found);
+        }
+
+        public List<Comune> getByProvincia(Long idProvincia){
+                return comuneRepository.getComuniByProvincia(idProvincia);
         }
 
 }

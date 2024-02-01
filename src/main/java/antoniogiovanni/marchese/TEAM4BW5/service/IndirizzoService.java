@@ -15,6 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class IndirizzoService {
 
@@ -71,5 +73,9 @@ public class IndirizzoService {
     }
     public int countByUserIdAndType( Long userId, TipoIndirizzo addressType){
         return indirizzoRepository.countByUserIdAndType(userId, addressType);
+    }
+
+    public List<Indirizzo> getByIdCliente(long idCliente){
+            return indirizzoRepository.getByIdUtente(idCliente);
     }
 }

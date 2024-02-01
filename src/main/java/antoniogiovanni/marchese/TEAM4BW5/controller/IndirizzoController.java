@@ -14,6 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/indirizzi")
 public class IndirizzoController {
@@ -66,6 +68,13 @@ public class IndirizzoController {
     public void deleteEvent(@PathVariable long idIndirizzo){
         Indirizzo found = indirizzoService.findById(idIndirizzo);
         indirizzoService.findByIdAndDelete(idIndirizzo);
+    }
+
+    @GetMapping("/getByIdCliente/{idCliente}")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Indirizzo> getByIdCliente(@PathVariable long idCliente){
+        return indirizzoService.getByIdCliente(idCliente);
     }
 
 
