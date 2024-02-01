@@ -1,5 +1,6 @@
 package antoniogiovanni.marchese.TEAM4BW5;
 
+import antoniogiovanni.marchese.TEAM4BW5.enums.StatoFattura;
 import antoniogiovanni.marchese.TEAM4BW5.enums.TipoCliente;
 import antoniogiovanni.marchese.TEAM4BW5.enums.TipoIndirizzo;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.*;
@@ -28,8 +29,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 	private String bearerToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzA2NjE4ODc0LCJleHAiOjE3MDcyMjM2NzR9.MFpCpjjxb814BLP0cTQ6ey7FBuR2etwGiEkMX3GAKHQ";
 
-	private Long clienteCreato = null;
-	private Long indirizzoCreato = null;
+
+		private Long utenteCreato = null;
+
+		private Long fatturaCreata = null;
+		private Long comuneCreato = null;
+
+		private Long provinciaCreata = null;
+
+		private Long clienteCreato = null;
+		private Long indirizzoCreato = null;
 	@Test
 	void loginOK() throws Exception {
 		String requestBody = "{\"email\": \"marchese@hotmail.com\",\"password\":\"1234\"}";
@@ -182,12 +191,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 		}
 
 	}
-		private Long utenteCreato = null;
 
-		private Long fatturaCreata = null;
-		private Long comuneCreato = null;
 
-		private Long provinciaCreata = null;
 
 
 
@@ -287,7 +292,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 			void creaFattura() throws JsonProcessingException {
 				String requestBody = objectMapper.writeValueAsString(
 
-						new NewFatturaDTO(LocalDate.of(2024,02,02), 1000.2,400));
+						new NewFatturaDTO(LocalDate.of(2024,02,02), 1000, 100.2, StatoFattura.PAGATA));
 
 				Response response = given()
 						.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
@@ -319,7 +324,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 			@Test
 			void creaFatturaGetAndDelete() throws JsonProcessingException {
 				String requestBody = objectMapper.writeValueAsString(
-						new NewFatturaDTO(LocalDate.of(2024,02,02), 1000.2, 400L));
+						new NewFatturaDTO(LocalDate.of(2024,02,02), 1000, 100.2, StatoFattura.PAGATA));
 
 				Response response = given()
 						.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
