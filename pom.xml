@@ -92,7 +92,16 @@
 			<artifactId>unirest-objectmapper-jackson</artifactId>
 			<version>4.0.0-RC2</version>
 		</dependency>
-
+		<dependency>
+			<groupId>io.rest-assured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>5.4.0</version> <!-- Sostituisci con l'ultima versione disponibile -->
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
 	</dependencies>
 
     <build>
