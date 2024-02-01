@@ -11,6 +11,6 @@ public record NewFatturaDTO(
         @NotNull(message ="Importo fattura obbligatorio" )
         Double importo,
         @NotNull(message ="Id obbligatorio" )
-        Long id
+        long id
 ){
 }
