@@ -1,5 +1,6 @@
 package antoniogiovanni.marchese.TEAM4BW5.controller;
 
+import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Comune;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ComuneDTO;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ResponseDTO;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,18 +48,23 @@ public class ComuneController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public Comune createComune(Comune comune){
-        return comuneService.save(comune);
+    public ResponseDTO createComune(@RequestBody @Validated ComuneDTO comune, BindingResult validation){
+        if (validation.hasErrors()) {
+            throw new BadRequestException(validation.getAllErrors().stream().map(err -> err.getDefaultMessage()).toList().toString());
+        }
+        System.out.println("comune da salvare");
+        System.out.println(comune.toString());
+        return  new ResponseDTO(comuneService.save(comune).getId());
     }
 
-    @PutMapping("/{idComune}")
-    @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public ComuneDTO modifyComune( ComuneDTO comuneDTO,@PathVariable Long idComune){
-        Comune found = comuneService.findById(idComune);
-
-        Comune comune = comuneService.findByIdAndUpdate(idComune,comuneDTO);
-        return new ComuneDTO(comuneDTO.codiceProvincia(), comuneDTO.denominazione());
-    }
+//    @PutMapping("/{idComune}")
+//    @PreAuthorize("hasAnyAuthority('ADMIN')")
+//    public ComuneDTO modifyComune( ComuneDTO comuneDTO,@PathVariable Long idComune){
+//        Comune found = comuneService.findById(idComune);
+//
+//        Comune comune = comuneService.findByIdAndUpdate(idComune,comuneDTO);
+//        return new ComuneDTO(comuneDTO.codiceProvincia(), comuneDTO.denominazione());
+//    }
     @DeleteMapping("/{idComune}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)

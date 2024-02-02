@@ -24,6 +24,14 @@ public class ComuneService {
         @Autowired
         private ProvinciaService provinciaService;
 
+        public Comune save(ComuneDTO comuneDTO) {
+                Comune comune = new Comune();
+                comune.setProgressivoDelComune(comuneDTO.progressivoDelComune());
+                comune.setProvincia(provinciaService.findById(comuneDTO.idProvincia()));
+                comune.setDenominazione(comune.getDenominazione());
+                return comuneRepository.save(comune);
+        }
+
         public Comune save(Comune comune) {
                 return comuneRepository.save(comune);
         }
@@ -40,7 +48,7 @@ public class ComuneService {
                 Comune found = this.findById(id);
 
                 found.setDenominazione(body.denominazione());
-                Provincia provincia = provinciaService.findById(body.codiceProvincia());
+                Provincia provincia = provinciaService.findById(body.idProvincia());
                 found.setProvincia(provincia);
                 return comuneRepository.save(found);
         }
