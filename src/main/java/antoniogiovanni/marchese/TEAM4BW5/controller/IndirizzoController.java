@@ -14,6 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/indirizzi")
 public class IndirizzoController {
@@ -22,14 +24,14 @@ public class IndirizzoController {
     private IndirizzoService indirizzoService;
     @GetMapping
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Indirizzo> getEventi(@RequestParam(defaultValue = "0") int page,
+    public Page<Indirizzo> getIndirizzi(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "10") int size,
                                      @RequestParam(defaultValue = "id") String orderBy) {
         return indirizzoService.getIndirizzi(page, size, orderBy);
     }
     @GetMapping("/{idIndirizzo}")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Indirizzo getEventoById(@PathVariable long idIndirizzo){
+    public Indirizzo getIndirizzoById(@PathVariable long idIndirizzo){
         return indirizzoService.findById(idIndirizzo);
     }
 
@@ -63,9 +65,16 @@ public class IndirizzoController {
     @DeleteMapping("/{idIndirizzo}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEvent(@PathVariable long idIndirizzo){
+    public void deleteIndirizzo(@PathVariable long idIndirizzo){
         Indirizzo found = indirizzoService.findById(idIndirizzo);
         indirizzoService.findByIdAndDelete(idIndirizzo);
+    }
+
+    @GetMapping("/getByIdCliente/{idCliente}")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
+    public List<Indirizzo> getByIdCliente(@PathVariable long idCliente){
+        return indirizzoService.getByIdCliente(idCliente);
     }
 
 

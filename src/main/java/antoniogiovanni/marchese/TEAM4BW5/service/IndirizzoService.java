@@ -15,6 +15,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class IndirizzoService {
 
@@ -60,16 +62,18 @@ public class IndirizzoService {
     public Indirizzo findByIdAndUpdate(long id, NewIndirizzoDTO indirizzoDTO) {
         Indirizzo found = this.findById(id);
         Comune comune = comuneService.findById(indirizzoDTO.idComune());
-        Cliente cliente = clienteService.findById(indirizzoDTO.idCliente());
         found.setCap(indirizzoDTO.cap());
         found.setVia(indirizzoDTO.via());
         found.setComune(comune);
-        found.setCliente(cliente);
         found.setLocalita(indirizzoDTO.localita());
         found.setNumeroCivico(indirizzoDTO.numeroCivico());
         return indirizzoRepository.save(found);
     }
     public int countByUserIdAndType( Long userId, TipoIndirizzo addressType){
         return indirizzoRepository.countByUserIdAndType(userId, addressType);
+    }
+
+    public List<Indirizzo> getByIdCliente(long idCliente){
+            return indirizzoRepository.getByIdUtente(idCliente);
     }
 }

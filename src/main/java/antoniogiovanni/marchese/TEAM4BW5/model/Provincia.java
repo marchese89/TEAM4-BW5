@@ -1,14 +1,13 @@
 package antoniogiovanni.marchese.TEAM4BW5.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 @Getter
 @Setter
@@ -23,4 +22,7 @@ public class Provincia {
     private String sigla;
     private String provincia;
     private String regione;
+    @OneToMany(mappedBy = "provincia")
+    @JsonIgnore
+    private List<Comune> comuneList;
 }

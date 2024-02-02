@@ -7,9 +7,11 @@ import antoniogiovanni.marchese.TEAM4BW5.service.ProvinciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,12 +20,20 @@ public class ProvinciaController {
     @Autowired private ComuneService comuneService;
     @Autowired private ProvinciaService provinciaService;
 
+    @Autowired
+    private final JdbcTemplate jdbcTemplate = new JdbcTemplate();
+
     @GetMapping
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
     public Page<Provincia> getProvince(@RequestParam(defaultValue = "0") int page,
                                        @RequestParam(defaultValue = "10") int size,
                                        @RequestParam(defaultValue = "id") String orderBy) {
         return provinciaService.getProvincia(page, size, orderBy);
+    }
+    @GetMapping("/noPage")
+    @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
+    public List<Provincia> getProvinceNoPage() {
+        return provinciaService.findAllNoPage();
     }
     @GetMapping("/{idProvincia}")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
@@ -50,5 +60,12 @@ public class ProvinciaController {
     public void deleteProvincia(@PathVariable Long idProvincia){
         Provincia found = provinciaService.findById(idProvincia);
         provinciaService.findByIdAndDelete(idProvincia);
+    }
+    @DeleteMapping("/all")
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteAllProvince(){
+        jdbcTemplate.execute("DELETE FROM public.provincia WHERE id >= 1");
+        jdbcTemplate.execute("ALTER SEQUENCE provincia_id_seq RESTART WITH 1");
     }
 }

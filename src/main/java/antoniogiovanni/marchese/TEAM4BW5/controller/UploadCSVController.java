@@ -104,6 +104,8 @@ public class UploadCSVController {
         } catch (IOException e) {
             return;
         }
+        //cancelliamo le province senza comuni
+        jdbcTemplate.execute("DELETE FROM provincia WHERE id NOT IN (SELECT DISTINCT provincia FROM Comune)");
     }
     @PostMapping("/province")
     @PreAuthorize("hasAnyAuthority('ADMIN')")

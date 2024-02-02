@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -52,5 +53,9 @@ public class ProvinciaService {
     public void findByIdAndDelete(Long id) {
         Provincia found = this.findById(id);
         provinciaRepository.delete(found);
+    }
+
+    public List<Provincia> findAllNoPage(){
+        return provinciaRepository.findAll();
     }
 }
