@@ -4,28 +4,28 @@ import antoniogiovanni.marchese.TEAM4BW5.enums.StatoFattura;
 import antoniogiovanni.marchese.TEAM4BW5.enums.TipoCliente;
 import antoniogiovanni.marchese.TEAM4BW5.enums.TipoIndirizzo;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.*;
+import antoniogiovanni.marchese.TEAM4BW5.service.ProvinciaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.restassured.response.Response;
-import jakarta.validation.constraints.*;
 import org.junit.jupiter.api.Test;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 import java.time.LocalDate;
-
-import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 	@SpringBootTest
 	class Team4Bw5ApplicationTests {
 
 	private ObjectMapper objectMapper = new ObjectMapper();
+	@Autowired
+	private ProvinciaService provinciaService;
 
 	private String bearerToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzA2NjE4ODc0LCJleHAiOjE3MDcyMjM2NzR9.MFpCpjjxb814BLP0cTQ6ey7FBuR2etwGiEkMX3GAKHQ";
 
@@ -212,14 +212,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 		@Test
 		void creaComune() throws JsonProcessingException {
 			String requestBody = objectMapper.writeValueAsString(
-					new ComuneDTO(1, "MM"));
+					new ComuneDTO("MM",1L,1L));
 
 			Response response = given()
 					.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
 					.contentType("application/json")
 					.body(requestBody)
 					.when()
-					.post("http://localhost:3001/comune");
+					.post("http://localhost:3001/comuni");
 
 			response.then().assertThat().statusCode(201);
 			response.then().assertThat().body(matchesRegex("\\{\"id\":.*\\}"));
@@ -244,9 +244,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 		@Test
 		void creaComuneGetAndDelete() throws JsonProcessingException {
 			String requestBody = objectMapper.writeValueAsString(
-					new ComuneDTO(1000,
-							"SM"
-							));
+					new ComuneDTO("TD",1L,1L));
 
 			Response response = given()
 					.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
@@ -271,7 +269,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 						.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
 						.contentType("application/json")
 						.when()
-						.delete("http://localhost:3001/indirizzi/"+idComune);
+						.delete("http://localhost:3001/comuni/"+idComune);
 				response3.then().assertThat().statusCode(204);
 			}}
 
@@ -290,9 +288,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 			@Test
 			void creaFattura() throws JsonProcessingException {
+				objectMapper.registerModule(new JavaTimeModule());
 				String requestBody = objectMapper.writeValueAsString(
 
-						new NewFatturaDTO(LocalDate.of(2024,02,02), 1000, 100.2, StatoFattura.PAGATA));
+						new NewFatturaDTO(LocalDate.of(2024,02,02), 1, 130.2, StatoFattura.PAGATA));
 
 				Response response = given()
 						.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
@@ -323,8 +322,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 			@Test
 			void creaFatturaGetAndDelete() throws JsonProcessingException {
+				objectMapper.registerModule(new JavaTimeModule());
 				String requestBody = objectMapper.writeValueAsString(
-						new NewFatturaDTO(LocalDate.of(2024,02,02), 1000, 100.2, StatoFattura.PAGATA));
+						new NewFatturaDTO(LocalDate.of(2024,02,02), 1, 100.2, StatoFattura.PAGATA));
 
 				Response response = given()
 						.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer

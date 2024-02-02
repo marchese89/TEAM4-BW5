@@ -1,5 +1,6 @@
 package antoniogiovanni.marchese.TEAM4BW5.controller;
 
+import antoniogiovanni.marchese.TEAM4BW5.exceptions.BadRequestException;
 import antoniogiovanni.marchese.TEAM4BW5.model.Provincia;
 import antoniogiovanni.marchese.TEAM4BW5.payloads.ProvinciaDTO;
 import antoniogiovanni.marchese.TEAM4BW5.service.ComuneService;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,7 +47,10 @@ public class ProvinciaController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    public Provincia createProvincia(@RequestBody ProvinciaDTO provinciaDTO){
+    public Provincia createProvincia(@RequestBody @Validated ProvinciaDTO provinciaDTO, BindingResult validation){
+        if (validation.hasErrors()) {
+            throw new BadRequestException(validation.getAllErrors().stream().map(err -> err.getDefaultMessage()).toList().toString());
+        }
         return provinciaService.save(provinciaDTO);
     }
 
