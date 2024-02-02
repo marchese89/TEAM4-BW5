@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ComuneService {
@@ -55,6 +56,11 @@ public class ComuneService {
 
         public List<Comune> getByProvincia(Long idProvincia){
                 return comuneRepository.getComuniByProvincia(idProvincia);
+        }
+
+        public Long getIdProvByComune(Long idComune){
+                Comune found = comuneRepository.findById(idComune).orElseThrow(() -> new NotFoundException(idComune));
+                return found.getProvincia().getId();
         }
 
 }

@@ -24,14 +24,14 @@ public class IndirizzoController {
     private IndirizzoService indirizzoService;
     @GetMapping
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Page<Indirizzo> getEventi(@RequestParam(defaultValue = "0") int page,
+    public Page<Indirizzo> getIndirizzi(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "10") int size,
                                      @RequestParam(defaultValue = "id") String orderBy) {
         return indirizzoService.getIndirizzi(page, size, orderBy);
     }
     @GetMapping("/{idIndirizzo}")
     @PreAuthorize("hasAnyAuthority('USER','ADMIN')")
-    public Indirizzo getEventoById(@PathVariable long idIndirizzo){
+    public Indirizzo getIndirizzoById(@PathVariable long idIndirizzo){
         return indirizzoService.findById(idIndirizzo);
     }
 
@@ -65,7 +65,7 @@ public class IndirizzoController {
     @DeleteMapping("/{idIndirizzo}")
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteEvent(@PathVariable long idIndirizzo){
+    public void deleteIndirizzo(@PathVariable long idIndirizzo){
         Indirizzo found = indirizzoService.findById(idIndirizzo);
         indirizzoService.findByIdAndDelete(idIndirizzo);
     }

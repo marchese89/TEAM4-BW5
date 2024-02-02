@@ -62,11 +62,9 @@ public class IndirizzoService {
     public Indirizzo findByIdAndUpdate(long id, NewIndirizzoDTO indirizzoDTO) {
         Indirizzo found = this.findById(id);
         Comune comune = comuneService.findById(indirizzoDTO.idComune());
-        Cliente cliente = clienteService.findById(indirizzoDTO.idCliente());
         found.setCap(indirizzoDTO.cap());
         found.setVia(indirizzoDTO.via());
         found.setComune(comune);
-        found.setCliente(cliente);
         found.setLocalita(indirizzoDTO.localita());
         found.setNumeroCivico(indirizzoDTO.numeroCivico());
         return indirizzoRepository.save(found);

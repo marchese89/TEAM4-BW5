@@ -11,5 +11,4 @@ import java.util.UUID;
 public interface ProvinciaRepository extends JpaRepository <Provincia, Long> {
     Optional<Provincia> findByProvincia(String provincia);
 
-
 }

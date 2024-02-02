@@ -1,5 +1,6 @@
 package antoniogiovanni.marchese.TEAM4BW5.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,8 +20,7 @@ public class Comune {
 
     @ManyToOne
     @JoinColumn(name = "provincia", nullable = false)
+    @JsonIgnore
     private Provincia provincia;
-
-
 
 }

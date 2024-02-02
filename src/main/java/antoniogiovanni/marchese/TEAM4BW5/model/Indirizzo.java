@@ -2,6 +2,9 @@ package antoniogiovanni.marchese.TEAM4BW5.model;
 
 import antoniogiovanni.marchese.TEAM4BW5.enums.TipoIndirizzo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
+import com.fasterxml.jackson.databind.annotation.JsonTypeResolver;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +30,6 @@ public class Indirizzo {
     private TipoIndirizzo tipoIndirizzo;
     @ManyToOne
     @JoinColumn(name = "comune_id")
-    @JsonIgnore
     private Comune comune;
     @ManyToOne
     @JoinColumn(name = "cliente_id")
