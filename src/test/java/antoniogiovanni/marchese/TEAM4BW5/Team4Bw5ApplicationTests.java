@@ -1,9 +1,9 @@
 package antoniogiovanni.marchese.TEAM4BW5;
 
+import antoniogiovanni.marchese.TEAM4BW5.enums.StatoFattura;
 import antoniogiovanni.marchese.TEAM4BW5.enums.TipoCliente;
 import antoniogiovanni.marchese.TEAM4BW5.enums.TipoIndirizzo;
-import antoniogiovanni.marchese.TEAM4BW5.payloads.ClienteDTO;
-import antoniogiovanni.marchese.TEAM4BW5.payloads.NewIndirizzoDTO;
+import antoniogiovanni.marchese.TEAM4BW5.payloads.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,15 +16,29 @@ import static io.restassured.RestAssured.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
-class Team4Bw5ApplicationTests {
+import java.time.LocalDate;
+
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+	@SpringBootTest
+	class Team4Bw5ApplicationTests {
 
 	private ObjectMapper objectMapper = new ObjectMapper();
 
 	private String bearerToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzA2NjE4ODc0LCJleHAiOjE3MDcyMjM2NzR9.MFpCpjjxb814BLP0cTQ6ey7FBuR2etwGiEkMX3GAKHQ";
 
-	private Long clienteCreato = null;
-	private Long indirizzoCreato = null;
+
+		private Long utenteCreato = null;
+
+		private Long fatturaCreata = null;
+		private Long comuneCreato = null;
+
+		private Long provinciaCreata = null;
+
+		private Long clienteCreato = null;
+		private Long indirizzoCreato = null;
 	@Test
 	void loginOK() throws Exception {
 		String requestBody = "{\"email\": \"marchese@hotmail.com\",\"password\":\"1234\"}";
@@ -178,4 +192,210 @@ class Team4Bw5ApplicationTests {
 
 	}
 
-}
+
+
+
+
+
+
+
+	@Test
+	void getTuttiComuni(){
+		Response response = given()
+				.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+				.contentType("application/json")
+				.when()
+				.get("http://localhost:3001/comuni");
+		response.then().assertThat().statusCode(200);
+		System.out.println(response.body().asString());}
+
+		@Test
+		void creaComune() throws JsonProcessingException {
+			String requestBody = objectMapper.writeValueAsString(
+					new ComuneDTO(1, "MM"));
+
+			Response response = given()
+					.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+					.contentType("application/json")
+					.body(requestBody)
+					.when()
+					.post("http://localhost:3001/comune");
+
+			response.then().assertThat().statusCode(201);
+			response.then().assertThat().body(matchesRegex("\\{\"id\":.*\\}"));
+			JsonNode jsonNode = objectMapper.readTree(response.body().asString());
+
+			comuneCreato = Long.parseLong(jsonNode.get("id").toString());
+
+		}
+		@Test
+		void creaComuneNo() {
+			String requestBody = "{}";
+
+			Response response = given()
+					.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+					.contentType("application/json")
+					.body(requestBody)
+					.when()
+					.post("http://localhost:3001/comuni");
+			response.then().assertThat().statusCode(400);
+		}
+
+		@Test
+		void creaComuneGetAndDelete() throws JsonProcessingException {
+			String requestBody = objectMapper.writeValueAsString(
+					new ComuneDTO(1000,
+							"SM"
+							));
+
+			Response response = given()
+					.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+					.contentType("application/json")
+					.body(requestBody)
+					.when()
+					.post("http://localhost:3001/comuni");
+			response.then().assertThat().statusCode(anyOf(equalTo(401), equalTo(201)));
+			System.out.println("Status Code: "+response.statusCode());
+			if(response.statusCode() == 201) {
+				Long idComune = objectMapper.readTree(response.body().asString()).get("id").asLong();
+				System.out.println("comune appena creato: " + idComune);
+				Response response2 = given()
+						.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+						.contentType("application/json")
+						.when()
+						.get("http://localhost:3001/comuni/" + idComune);
+				response2.then().assertThat().statusCode(200);
+
+				//cancello il comune appena creato
+				Response response3 = given()
+						.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+						.contentType("application/json")
+						.when()
+						.delete("http://localhost:3001/indirizzi/"+idComune);
+				response3.then().assertThat().statusCode(204);
+			}}
+
+
+
+
+			@Test
+			void getTutteFatture(){
+				Response response = given()
+						.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+						.contentType("application/json")
+						.when()
+						.get("http://localhost:3001/fatture");
+				response.then().assertThat().statusCode(200);
+				System.out.println(response.body().asString());}
+
+			@Test
+			void creaFattura() throws JsonProcessingException {
+				String requestBody = objectMapper.writeValueAsString(
+
+						new NewFatturaDTO(LocalDate.of(2024,02,02), 1000, 100.2, StatoFattura.PAGATA));
+
+				Response response = given()
+						.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+						.contentType("application/json")
+						.body(requestBody)
+						.when()
+						.post("http://localhost:3001/fatture");
+
+				response.then().assertThat().statusCode(201);
+				response.then().assertThat().body(matchesRegex("\\{\"id\":.*\\}"));
+				JsonNode jsonNode = objectMapper.readTree(response.body().asString());
+
+				fatturaCreata = Long.parseLong(jsonNode.get("id").toString());
+
+			}
+			@Test
+			void creaFatturaNo() {
+				String requestBody = "{}";
+
+				Response response = given()
+						.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+						.contentType("application/json")
+						.body(requestBody)
+						.when()
+						.post("http://localhost:3001/fatture");
+				response.then().assertThat().statusCode(400);
+			}
+
+			@Test
+			void creaFatturaGetAndDelete() throws JsonProcessingException {
+				String requestBody = objectMapper.writeValueAsString(
+						new NewFatturaDTO(LocalDate.of(2024,02,02), 1000, 100.2, StatoFattura.PAGATA));
+
+				Response response = given()
+						.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+						.contentType("application/json")
+						.body(requestBody)
+						.when()
+						.post("http://localhost:3001/fatture");
+				response.then().assertThat().statusCode(anyOf(equalTo(401), equalTo(201)));
+				System.out.println("Status Code: "+response.statusCode());
+				if(response.statusCode() == 201) {
+					Long idFattura = objectMapper.readTree(response.body().asString()).get("id").asLong();
+					System.out.println("fattura appena creato: " + idFattura);
+					Response response2 = given()
+							.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+							.contentType("application/json")
+							.when()
+							.get("http://localhost:3001/fatture/" + idFattura);
+					response2.then().assertThat().statusCode(200);
+
+					//cancello la fattura appena creata
+					Response response3 = given()
+							.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+							.contentType("application/json")
+							.when()
+							.delete("http://localhost:3001/fatture/" + idFattura);
+					response3.then().assertThat().statusCode(204);}}
+
+
+
+
+
+
+
+				@Test
+				void getTutteProvince(){
+					Response response = given()
+							.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+							.contentType("application/json")
+							.when()
+							.get("http://localhost:3001/province");
+					response.then().assertThat().statusCode(200);
+					System.out.println(response.body().asString());}
+
+				@Test
+				void creaProvincia() throws JsonProcessingException {
+					String requestBody = objectMapper.writeValueAsString(
+							new ProvinciaDTO("PP", "MM","LOMBARDIA"));
+
+					Response response = given()
+							.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+							.contentType("application/json")
+							.body(requestBody)
+							.when()
+							.post("http://localhost:3001/province");
+
+					response.then().assertThat().statusCode(201);
+					response.then().assertThat().body(matchesRegex("\\{\"id\":.*\\}"));
+					JsonNode jsonNode = objectMapper.readTree(response.body().asString());
+
+					provinciaCreata = Long.parseLong(jsonNode.get("id").toString());
+
+				}
+				@Test
+				void creaProvinciaNo() {
+					String requestBody = "{}";
+
+					Response response = given()
+							.header("Authorization", "Bearer " + bearerToken) // Aggiungi il token di autenticazione Bearer
+							.contentType("application/json")
+							.body(requestBody)
+							.when()
+							.post("http://localhost:3001/province");
+					response.then().assertThat().statusCode(400);
+				}}
